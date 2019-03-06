@@ -17,3 +17,10 @@ t
 Dapp/src/main/java/com/netsoftware/wallhaven/ui/main/MainViewModel.kt,c/6/c6b8cff291f5148f26257a3cf53f2b3d386d03fe
 k
 ;app/src/main/java/com/netsoftware/wallhaven/MainActivity.kt,7/c/7cff9e6623a98f5253932cfe3d5487019f738638
+:
+
+.gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
+m
+=app/src/main/java/com/netsoftware/wallhaven/data/UserModel.kt,1/e/1e2ee42e7ac7f40697b7d6ca2eda14f1ebbe2dc1
+?
+settings.gradle,0/5/05efc8b1657769a27696d478ded1e95f38737233
