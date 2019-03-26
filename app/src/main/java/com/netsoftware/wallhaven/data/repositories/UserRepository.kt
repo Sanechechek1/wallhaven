@@ -1,8 +1,10 @@
-package com.netsoftware.wallhaven.data
+package com.netsoftware.wallhaven.data.repositories
 
 import android.os.Handler
+import com.netsoftware.wallhaven.utility.managers.NetManager
+import javax.inject.Inject
 
-class UserModel {
+class UserRepository @Inject constructor(netManager: NetManager){
     var counter = 0
 
     fun refreshData(onDataReadyCallback: OnDataReadyCallback){

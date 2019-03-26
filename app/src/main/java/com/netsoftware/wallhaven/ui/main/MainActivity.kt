@@ -1,12 +1,12 @@
-package com.netsoftware.wallhaven
+package com.netsoftware.wallhaven.ui.main
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.databinding.MainActivityBinding
-import com.netsoftware.wallhaven.ui.main.MainFragment
+import dagger.android.support.DaggerAppCompatActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity() {
 
     lateinit var binding: MainActivityBinding
 
