@@ -7,6 +7,7 @@ import androidx.room.Query
 import com.netsoftware.wallhaven.data.models.User
 import io.reactivex.Flowable
 import io.reactivex.Maybe
+import io.reactivex.Single
 
 @Dao
 interface UserDao{
@@ -17,7 +18,7 @@ interface UserDao{
     fun getUser(id: Long): Maybe<User>
 
     @Insert(onConflict = REPLACE)
-    fun insert(user: User): Long
+    fun insert(user: User): Single<Long>
 
     @Query("DELETE from user")
     fun deleteAll()

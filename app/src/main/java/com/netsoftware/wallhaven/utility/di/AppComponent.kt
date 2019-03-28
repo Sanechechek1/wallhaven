@@ -1,7 +1,9 @@
 package com.netsoftware.wallhaven.utility.di
 
+import android.content.Context
 import com.netsoftware.wallhaven.WallhavenApp
 import com.netsoftware.wallhaven.data.WallhavenDB
+import com.netsoftware.wallhaven.data.dataSources.local.SharedPrefs
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -15,7 +17,7 @@ import javax.inject.Singleton
         ActivityBindingModule::class,
         AppModule::class,
         ViewModelBuilder::class,
-        RoomModule::class
+        DataModule::class
     ])
 @Singleton
 interface AppComponent : AndroidInjector<WallhavenApp>{
@@ -30,4 +32,6 @@ interface AppComponent : AndroidInjector<WallhavenApp>{
     }
 
     fun getDB(): WallhavenDB
+    fun getSharedPrefs(): SharedPrefs
+    fun getAppContext(): Context
 }

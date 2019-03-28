@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 
 @Module
-class RoomModule{
+class DataModule{
     @Singleton
     @Provides
     fun providesRoomDatabase(application: Application): WallhavenDB {
