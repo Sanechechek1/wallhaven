@@ -15,13 +15,13 @@ class MainViewModel @Inject constructor(private var userRepository: UserReposito
 
     fun refreshData(){
         isLoading.value = true
-        userRepository.counter++
-        userRepository.refreshData(object : UserRepository.OnDataReadyCallback {
-            override fun onDataReady(data: String) {
-                isLoading.value = false
-                newUserCounter.value = data
-            }
-        })
+//        userRepository.counter++
+//        userRepository.refreshData(object : UserRepository.OnDataReadyCallback {
+//            override fun onDataReady(data: String) {
+//                isLoading.value = false
+//                newUserCounter.value = data
+//            }
+//        })
         compositeDisposable.add(WallhavenApp.appComponent.getDB().userDao().insert(User(255)).subscribeOn(Schedulers.io()).subscribe {
                 t -> Log.w("LOG", "User #$t added")
         }

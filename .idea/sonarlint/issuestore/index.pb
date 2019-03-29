@@ -80,3 +80,5 @@ Qapp/src/main/java/com/netsoftware/wallhaven/data/dataSources/local/SharedPrefs.
 Yapp/src/main/java/com/netsoftware/wallhaven/data/dataSources/local/UserLocalDataSource.kt,9/6/96189aff01db07f6ad2717af93f35542d6d32d3a
 
 Oapp/src/main/java/com/netsoftware/wallhaven/utility/extensions/BaseViewModel.kt,5/c/5ce236b9e3defb7e1842e9d0a97a8a754fc1ab57
+€
+Papp/src/main/java/com/netsoftware/wallhaven/utility/managers/MyDisplayManager.kt,5/8/5872b1178083b0711ab70e6b1f087b74c339c050

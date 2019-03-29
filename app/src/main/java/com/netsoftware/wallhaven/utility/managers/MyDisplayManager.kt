@@ -25,6 +25,4 @@ object MyDisplayManager{
     fun findResolution(): String{
         return "${displaySize.x}$resolutionDelimiter${displaySize.y}"
     }
-
-    //TODO: reorganize class to rules
 }

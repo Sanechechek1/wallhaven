@@ -1,4 +1,4 @@
-package com.netsoftware.wallhaven.data.dataSources.local
+package com.netsoftware.wallhaven.data.repositories.dataSources.local
 
 import android.content.Context
 import com.chibatching.kotpref.KotprefModel
@@ -8,4 +8,5 @@ class SharedPrefs @Inject constructor(context: Context): KotprefModel(context){
     override val kotprefName: String = "wh_prefs"
     var userId by longPref()
     var screenResolution by stringPref()
+    var screenRatio by stringPref()
 }
