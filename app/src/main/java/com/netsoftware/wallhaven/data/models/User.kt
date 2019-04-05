@@ -3,31 +3,41 @@ package com.netsoftware.wallhaven.data.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import com.netsoftware.wallhaven.data.enums.Categories
-import com.netsoftware.wallhaven.data.enums.Purity
-import com.netsoftware.wallhaven.data.enums.ThumbSize
-import com.netsoftware.wallhaven.data.enums.TopListRange
+
+const val THUMB_SMALL = "small"
+const val THUMB_ORIGINAL = "original"
+const val THUMB_LARGE = "large"
+const val TOPLIST_DAY = "1D"
+const val TOPLIST_WEEK = "1W"
+const val TOPLIST_MONTH = "1M"
+const val TOPLIST_YEAR = "1Y"
+const val CATEGORY_GENERAL = "general"
+const val CATEGORY_ANIME = "anime"
+const val CATEGORY_PEOPLE = "people"
+const val PURITY_SFW = "sfw"
+const val PURITY_SKETCHY = "sketchy"
+const val PURITY_NSFW = "nsfw"
 
 @Entity(tableName = "user")
 data class User(
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    var id: Long = 0,
     var apiKey: String = "",
 
     @SerializedName("thumb_size")
-    var thumbSize: String = ThumbSize.SMALL.value,
+    var thumbSize: String = THUMB_SMALL,
 
     @SerializedName("per_page")
     var wallPerPage: Int = 24,
 
     @SerializedName("toplist_range")
-    var topListRange: String = TopListRange.MONTH.value,
+    var topListRange: String = TOPLIST_MONTH,
 
     @SerializedName("purity")
-    var purity: MutableList<String> = mutableListOf(Purity.SFW.value, Purity.SKETCHY.value),
+    var purity: MutableList<String> = mutableListOf(PURITY_SFW, PURITY_SKETCHY),
 
     @SerializedName("categories")
-    var categories: MutableList<String> = mutableListOf(Categories.GENERAL.value, Categories.ANIME.value, Categories.PEOPLE.value),
+    var categories: MutableList<String> = mutableListOf(CATEGORY_GENERAL, CATEGORY_ANIME, CATEGORY_PEOPLE),
 
     @SerializedName("resolutions")
     var resolutions: MutableList<String> = mutableListOf(),

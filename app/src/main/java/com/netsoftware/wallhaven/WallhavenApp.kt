@@ -2,11 +2,15 @@ package com.netsoftware.wallhaven
 
 import android.util.Log
 import com.amitshekhar.DebugDB
+import com.netsoftware.wallhaven.data.models.User
 import com.netsoftware.wallhaven.utility.di.AppComponent
 import com.netsoftware.wallhaven.utility.di.DaggerAppComponent
 import com.netsoftware.wallhaven.utility.managers.MyDisplayManager
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 
 class WallhavenApp : DaggerApplication(){
@@ -27,6 +31,18 @@ class WallhavenApp : DaggerApplication(){
         if(prefs.screenResolution.isEmpty()){
             prefs.screenResolution = MyDisplayManager.findResolution()
             prefs.screenRatio = MyDisplayManager.findRatio()
+        }
+        if(prefs.userId==0L){
+           populateDB()
+        }
+    }
+
+    private fun populateDB(){
+        runBlocking {
+            appComponent.getSharedPrefs().userId =
+            withContext(Dispatchers.IO) {
+                appComponent.getDB().userDao().simpleInsert(User(apiKey = "6kJO7b9FEEUOHpqRl6PZBBbjzkrfBkSY"))
+            }
         }
     }
 

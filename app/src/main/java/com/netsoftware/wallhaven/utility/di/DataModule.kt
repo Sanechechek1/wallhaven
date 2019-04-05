@@ -2,7 +2,11 @@ package com.netsoftware.wallhaven.utility.di
 
 import android.app.Application
 import androidx.room.Room
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.netsoftware.wallhaven.data.MyDeserializer
 import com.netsoftware.wallhaven.data.WallhavenDB
+import com.netsoftware.wallhaven.data.models.User
 import com.netsoftware.wallhaven.data.repositories.dataSources.local.UserDao
 import com.netsoftware.wallhaven.data.repositories.dataSources.remote.WallhavenApi
 import dagger.Module
@@ -30,12 +34,20 @@ class DataModule{
         return demoDatabase.userDao()
     }
 
+    @Provides
+    @Singleton
+    fun provideGson(): Gson{
+        return GsonBuilder()
+            .registerTypeAdapter(User::class.java, MyDeserializer<User>())
+            .create()
+    }
+
     @Singleton
     @Provides
-    fun provideRetrofit(): WallhavenApi{
+    fun provideRetrofit(gson: Gson): WallhavenApi{
         return Retrofit.Builder()
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .baseUrl("http://stest39.wallhaven.cc/api/v1/")
             .build().create(WallhavenApi::class.java)
     }

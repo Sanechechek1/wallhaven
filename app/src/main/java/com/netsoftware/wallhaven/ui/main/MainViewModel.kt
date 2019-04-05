@@ -3,9 +3,10 @@ package com.netsoftware.wallhaven.ui.main
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.netsoftware.wallhaven.WallhavenApp
-import com.netsoftware.wallhaven.data.models.User
 import com.netsoftware.wallhaven.data.repositories.UserRepository
 import com.netsoftware.wallhaven.utility.extensions.BaseViewModel
+import com.netsoftware.wallhaven.utility.extensions.addTo
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -15,30 +16,18 @@ class MainViewModel @Inject constructor(private var userRepository: UserReposito
 
     fun refreshData(){
         isLoading.value = true
-//        userRepository.counter++
-//        userRepository.refreshData(object : UserRepository.OnDataReadyCallback {
-//            override fun onDataReady(data: String) {
-//                isLoading.value = false
-//                newUserCounter.value = data
-//            }
-//        })
-        compositeDisposable.add(WallhavenApp.appComponent.getDB().userDao().insert(User(255)).subscribeOn(Schedulers.io()).subscribe {
-                t -> Log.w("LOG", "User #$t added")
-        }
-        )
-
-
-
-//        compositeDisposable.add(Single.fromCallable{
-//            WallhavenApp.appComponent.getDB().userDao().insert(User(255))}
-//            .subscribeOn(Schedulers.io())
-//            .subscribe(
-//                {
-//                    Log.w("LOG", "User #$it added")
-//                },{
-//
-//                }
-//            )
-//        )
+        userRepository.getUser(1).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doFinally {
+                isLoading.value = false
+            }
+            .subscribe(
+                {
+                    Log.w(WallhavenApp.TAG, "onCreateView: $it ${Thread.currentThread().name}")
+                },
+                {
+                    Log.w(WallhavenApp.TAG, "onCreateView: $it")
+                }
+            ).addTo(compositeDisposable)
     }
 }
