@@ -74,3 +74,7 @@ Zapp/src/main/java/com/netsoftware/wallhaven/data/repositories/dataSources/local
 `app/src/main/java/com/netsoftware/wallhaven/data/repositories/dataSources/remote/WallhavenApi.kt,b/b/bbdc5e6fe68c44efb26d76ec17e5b22c5dab501f
 ~
 Napp/src/main/java/com/netsoftware/wallhaven/utility/extensions/FunExtension.kt,2/f/2ffbd1ed7cce2670e71945500361b5d46fd39c03
+R
+"app/src/main/res/values/colors.xml,9/6/969faa2a5d9f5e8390e958d2c07f2cfd54676e6b
+S
+#app/src/main/res/values/strings.xml,d/2/d2281fbb3027de2722081a53408dd77628bf080e

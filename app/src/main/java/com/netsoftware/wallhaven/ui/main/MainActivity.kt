@@ -3,9 +3,11 @@ package com.netsoftware.wallhaven.ui.main
 import android.os.Bundle
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import co.zsmb.materialdrawerkt.builders.accountHeader
+import co.zsmb.materialdrawerkt.builders.drawer
+import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
+import co.zsmb.materialdrawerkt.draweritems.divider
 import com.mikepenz.materialdrawer.Drawer
-import com.mikepenz.materialdrawer.DrawerBuilder
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.databinding.MainActivityBinding
 import dagger.android.support.DaggerAppCompatActivity
@@ -25,24 +27,25 @@ class MainActivity : DaggerAppCompatActivity() {
         drawerInit()
     }
 
-    private fun drawerInit(){
-//        val headerResult = AccountHeaderBuilder()
-//            .withActivity(this)
-//            .withCompactStyle(false)
-//            .withHeaderBackground(R.drawable.header)
-//            .build()
-        drawer = DrawerBuilder()
-            .withActivity(this)
-            .withDisplayBelowStatusBar(true)
-            .withHeaderDivider(true)
-            .addDrawerItems(
-                PrimaryDrawerItem().withIdentifier(1).withName("Latest"),
-                PrimaryDrawerItem().withIdentifier(1).withName("Random")
-            )
-            .withOnDrawerItemClickListener { view, position, drawerItem ->
-                Toast.makeText(this,"BOOM", Toast.LENGTH_SHORT).show()
-                true
+    private fun drawerInit() {
+        drawer = drawer {
+            displayBelowStatusBar = false
+            accountHeader {
+                compactStyle = false
+                background = R.drawable.drawer_header
             }
-            .build()
+            secondaryItem("Latest") { identifier = 1 }
+            secondaryItem("Top List") { identifier = 2 }
+            secondaryItem("Random") { identifier = 3 }
+            secondaryItem("Favorites") { identifier = 4 }
+            secondaryItem("Tags") { identifier = 5; enabled = false }
+            divider {}
+            secondaryItem("Settings") { identifier = 6 }
+            secondaryItem("About") { identifier = 7 }
+            onItemClick { _, _, drawerItem ->
+                Toast.makeText(this@MainActivity, "${drawerItem.identifier}", Toast.LENGTH_SHORT).show()
+                false
+            }
+        }
     }
 }
