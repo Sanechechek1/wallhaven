@@ -2,6 +2,9 @@ package com.netsoftware.wallhaven
 
 import android.util.Log
 import com.amitshekhar.DebugDB
+import com.mikepenz.essentialpack_typeface_library.EssentialPack
+import com.mikepenz.essentialpackfilled_typeface_library.EssentialPackFilled
+import com.mikepenz.iconics.Iconics
 import com.netsoftware.wallhaven.data.models.User
 import com.netsoftware.wallhaven.utility.di.AppComponent
 import com.netsoftware.wallhaven.utility.di.DaggerAppComponent
@@ -18,6 +21,7 @@ class WallhavenApp : DaggerApplication(){
     override fun onCreate() {
         super.onCreate()
         checkScreenDimension()
+        initIconFonts()
         if(BuildConfig.DEBUG) Log.w("DEBUG-DB", DebugDB.getAddressLog())
     }
 
@@ -44,6 +48,12 @@ class WallhavenApp : DaggerApplication(){
                 appComponent.getDB().userDao().simpleInsert(User(apiKey = "6kJO7b9FEEUOHpqRl6PZBBbjzkrfBkSY"))
             }
         }
+    }
+
+    private fun initIconFonts(){
+        Iconics.init(this)
+        Iconics.registerFont(EssentialPack())
+        Iconics.registerFont(EssentialPackFilled())
     }
 
     companion object {

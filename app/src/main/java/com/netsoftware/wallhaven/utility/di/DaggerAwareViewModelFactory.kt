@@ -1,4 +1,4 @@
-package me.mladenrakonjac.modernandroidapp.utility.di
+package com.netsoftware.wallhaven.utility.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

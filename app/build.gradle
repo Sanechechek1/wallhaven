@@ -92,7 +92,11 @@ dependencies {
     implementation 'com.mikepenz:fontawesome-typeface:5.3.1.1@aar'
 
     //MaterialDrawer
-//    implementation "com.mikepenz:materialdrawer:6.1.2"
+    implementation "com.mikepenz:materialdrawer:6.1.2"
     implementation 'co.zsmb:materialdrawer-kt:2.0.1'
+
+    //MyIconFonts
+    implementation 'com.github.AScri:EssentialPack:1.0.1'
+    implementation 'com.github.AScri:EssentialPackFilled:1.0.0'
 
 }

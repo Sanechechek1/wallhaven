@@ -7,7 +7,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import me.mladenrakonjac.modernandroidapp.utility.di.ViewModelKey
 
 @Module
 abstract class MainActivityModule{
