@@ -88,11 +88,12 @@ dependencies {
     implementation 'com.chibatching.kotpref:kotpref:2.6.0'
 
     //Iconic
-    implementation "com.mikepenz:iconics-core:3.2.3"
-    implementation 'com.mikepenz:fontawesome-typeface:5.3.1.1@aar'
+    implementation "com.mikepenz:iconics-core:3.2.5"
+    implementation "com.mikepenz:iconics-views:3.2.5"
+    implementation 'com.mikepenz:material-design-iconic-typeface:2.2.0.5@aar'
 
     //MaterialDrawer
-    implementation "com.mikepenz:materialdrawer:6.1.2"
+//    implementation "com.mikepenz:materialdrawer:6.1.2"
     implementation 'co.zsmb:materialdrawer-kt:2.0.1'
 
     //MyIconFonts

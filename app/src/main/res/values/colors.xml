@@ -5,20 +5,23 @@
     <color name="colorAccent">#D81B60</color>
     <color name="darkGray">#252525</color>
     <color name="white">#F0E9E9</color>
+    <color name="light_icon_tint">#9EFFFFFF</color>
+    <color name="dark_icon_tint">#1a1a1a</color>
 
     <!-- OVERWRITE THESE COLORS FOR THEME -->
     <!-- MaterialDrawer DEFAULT colors -->
     <color name="material_drawer_background">#1a1a1a</color>
     <!-- Material DEFAULT text / items colors -->
     <color name="material_drawer_primary_text">#DEFFFFFF</color>
-    <color name="material_drawer_primary_icon">#8AFFFFFF</color>
+    <color name="material_drawer_primary_icon">@color/light_icon_tint</color>
     <color name="material_drawer_secondary_text">#8AFFFFFF</color>
     <color name="material_drawer_hint_text">#42FFFFFF</color>
     <color name="material_drawer_divider">#373435</color>
+    <color name="material_drawer_icon_disabled">#665F5F5F</color>
     <!-- Material DEFAULT drawer colors -->
-    <color name="material_drawer_selected">#1F2196F3</color>
+    <color name="material_drawer_selected">#1F008577</color>
     <color name="material_drawer_selected_legacy">#202020</color>
-    <color name="material_drawer_selected_text">#2196F3</color>
+    <color name="material_drawer_selected_text">#00AA97</color>
     <color name="material_drawer_header_selection_text">#FFFFFFFF</color>
     <color name="material_drawer_header_selection_subtext">#B3FFFFFF</color>
 </resources>

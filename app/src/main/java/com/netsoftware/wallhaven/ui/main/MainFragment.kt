@@ -12,6 +12,7 @@ import com.netsoftware.wallhaven.data.repositories.UserRepository
 import com.netsoftware.wallhaven.databinding.MainFragmentBinding
 import dagger.android.support.DaggerFragment
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.main_fragment.*
 import javax.inject.Inject
 
 
@@ -49,6 +50,7 @@ class MainFragment : DaggerFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.lifecycleOwner = this
+        toolbar_menu_icon.setOnClickListener { (activity as MainActivity).openDrawer() }
     }
 
     override fun onDestroy() {
