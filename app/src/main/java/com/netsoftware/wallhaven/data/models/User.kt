@@ -24,6 +24,12 @@ data class User(
     var id: Long = 0,
     var apiKey: String = "",
 
+    @SerializedName("username")
+    var name: String = "",
+
+    @SerializedName("avatar")
+    var avatars: MutableMap<String, String> = mutableMapOf(),
+
     @SerializedName("thumb_size")
     var thumbSize: String = THUMB_SMALL,
 

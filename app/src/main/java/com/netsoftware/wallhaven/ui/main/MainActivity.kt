@@ -22,9 +22,10 @@ class MainActivity : DaggerAppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MainFragment.newInstance())
+                .replace(R.id.container, ViewerFragment.newInstance())
                 .commitNow()
         }
+        Thread.sleep(500)
         drawerInit()
     }
 

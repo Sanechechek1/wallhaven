@@ -6,7 +6,7 @@ import android.view.WindowManager
 import com.netsoftware.wallhaven.WallhavenApp
 
 object MyDisplayManager{
-    const val resolutionDelimiter = "x"
+    private const val resolutionDelimiter = "x"
     private val displaySize: Point by lazy {
         Point().also {
             (WallhavenApp.appComponent.getAppContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
@@ -20,6 +20,14 @@ object MyDisplayManager{
     fun findRatio(): String{
         val gcd = gcd(displaySize.x, displaySize.y)
         return "${displaySize.x/gcd}$resolutionDelimiter${displaySize.y/gcd}"
+    }
+
+    fun findRatio(resolution: String): String{
+        val resSlices = resolution.split(resolutionDelimiter)
+        return if(resSlices.size>1){
+            val gcd = gcd(displaySize.x, displaySize.y)
+            "${displaySize.x/gcd}$resolutionDelimiter${displaySize.y/gcd}"
+        } else ""
     }
 
     fun findResolution(): String{

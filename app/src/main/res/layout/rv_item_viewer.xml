@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="position"
+            type="java.lang.Integer" />
+        <variable
+            name="wallpaper"
+            type="com.netsoftware.wallhaven.data.models.Wallpaper" />
+        <variable
+            name="viewModel"
+            type="com.netsoftware.wallhaven.ui.main.ViewerViewModel" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rv_item_image_border"
+        app:cardCornerRadius="10dp"
+        >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            imageThumbs="@{wallpaper.thumbs}"
+            />
+            <!--<androidx.appcompat.widget.AppCompatImageView-->
+                <!--android:outlineProvider="background"-->
+                <!--android:layout_width="200dp"-->
+                <!--android:layout_height="100dp"-->
+                <!--android:background="@drawable/rv_item_image_border"-->
+                <!--android:scaleType="fitXY"-->
+                <!--android:src="@drawable/drawer_header"-->
+                <!--app:imageUrl='@{viewModel.images[viewModel.getDogBreedAt(position).breed]}' />-->
+        </androidx.cardview.widget.CardView>
+</layout>

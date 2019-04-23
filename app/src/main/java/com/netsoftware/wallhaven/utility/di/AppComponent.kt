@@ -1,6 +1,7 @@
 package com.netsoftware.wallhaven.utility.di
 
 import android.content.Context
+import com.google.gson.Gson
 import com.netsoftware.wallhaven.WallhavenApp
 import com.netsoftware.wallhaven.data.WallhavenDB
 import com.netsoftware.wallhaven.data.repositories.dataSources.local.SharedPrefs
@@ -9,6 +10,7 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Component(
@@ -20,7 +22,7 @@ import javax.inject.Singleton
         DataModule::class
     ])
 @Singleton
-interface AppComponent : AndroidInjector<WallhavenApp>{
+interface AppComponent : AndroidInjector<WallhavenApp> {
 
     @Component.Builder
     interface Builder {
@@ -31,6 +33,7 @@ interface AppComponent : AndroidInjector<WallhavenApp>{
         fun build(): AppComponent
     }
 
+    @Named("nested") fun getGson(): Gson
     fun getDB(): WallhavenDB
     fun getSharedPrefs(): SharedPrefs
     fun getAppContext(): Context

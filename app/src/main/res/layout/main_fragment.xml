@@ -6,7 +6,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.netsoftware.wallhaven.ui.main.MainViewModel" />
+            type="com.netsoftware.wallhaven.ui.main.ViewerViewModel" />
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -105,13 +105,13 @@
     <!--<import type="android.view.View"/>-->
     <!--<variable-->
         <!--name="viewModel"-->
-        <!--type="com.netsoftware.wallhaven.ui.main.MainViewModel" />-->
+        <!--type="com.netsoftware.wallhaven.ui.main.ViewerViewModelel" />-->
 <!--</data>-->
 <!--<androidx.constraintlayout.widget.ConstraintLayout-->
     <!--android:id="@+id/main"-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="match_parent"-->
-    <!--tools:context=".ui.main.MainFragment">-->
+    <!--tools:context=".ui.main.ViewerFragment">-->
 
     <!--<ProgressBar-->
         <!--android:id="@+id/loading"-->

@@ -7,13 +7,16 @@ import com.google.gson.GsonBuilder
 import com.netsoftware.wallhaven.data.MyDeserializer
 import com.netsoftware.wallhaven.data.WallhavenDB
 import com.netsoftware.wallhaven.data.models.User
+import com.netsoftware.wallhaven.data.models.Wallpaper
 import com.netsoftware.wallhaven.data.repositories.dataSources.local.UserDao
 import com.netsoftware.wallhaven.data.repositories.dataSources.remote.WallhavenApi
+import com.netsoftware.wallhaven.utility.managers.MyDateFormat
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 
@@ -36,9 +39,20 @@ class DataModule{
 
     @Provides
     @Singleton
-    fun provideGson(): Gson{
+    fun provideGsonUnpacker(): Gson{
         return GsonBuilder()
             .registerTypeAdapter(User::class.java, MyDeserializer<User>())
+            .registerTypeAdapter(Wallpaper::class.java, MyDeserializer<Wallpaper>())
+            .setDateFormat(MyDateFormat.serverDateFormat.toPattern())
+            .create()
+    }
+
+    @Provides
+    @Singleton
+    @Named("nested")
+    fun provideNestedGson(): Gson{
+        return GsonBuilder()
+            .setDateFormat(MyDateFormat.serverDateFormat.toPattern())
             .create()
     }
 

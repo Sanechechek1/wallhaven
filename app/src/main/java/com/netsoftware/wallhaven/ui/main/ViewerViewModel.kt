@@ -10,9 +10,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(private var userRepository: UserRepository): BaseViewModel() {
-    val newUserCounter =  MutableLiveData("No data.")
-    val isLoading = MutableLiveData(false)
+class ViewerViewModel @Inject constructor(private var userRepository: UserRepository): BaseViewModel() {
+    private val newUserCounter =  MutableLiveData("No data.")
+    private val isLoading = MutableLiveData(false)
 
     fun refreshData(){
         isLoading.value = true
