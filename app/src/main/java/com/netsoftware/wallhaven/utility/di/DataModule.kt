@@ -4,12 +4,13 @@ import android.app.Application
 import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.netsoftware.wallhaven.data.MyDeserializer
 import com.netsoftware.wallhaven.data.WallhavenDB
+import com.netsoftware.wallhaven.data.dataSources.local.UserDao
+import com.netsoftware.wallhaven.data.dataSources.remote.WallhavenApi
 import com.netsoftware.wallhaven.data.models.User
 import com.netsoftware.wallhaven.data.models.Wallpaper
-import com.netsoftware.wallhaven.data.repositories.dataSources.local.UserDao
-import com.netsoftware.wallhaven.data.repositories.dataSources.remote.WallhavenApi
 import com.netsoftware.wallhaven.utility.managers.MyDateFormat
 import dagger.Module
 import dagger.Provides
@@ -18,6 +19,8 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
+
+
 
 
 @Module
@@ -43,6 +46,7 @@ class DataModule{
         return GsonBuilder()
             .registerTypeAdapter(User::class.java, MyDeserializer<User>())
             .registerTypeAdapter(Wallpaper::class.java, MyDeserializer<Wallpaper>())
+            .registerTypeAdapter(object : TypeToken<MutableList<Wallpaper>>(){}.type, MyDeserializer<MutableList<Wallpaper>>())
             .setDateFormat(MyDateFormat.serverDateFormat.toPattern())
             .create()
     }

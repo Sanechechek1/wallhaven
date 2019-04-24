@@ -1,8 +1,8 @@
 package com.netsoftware.wallhaven.data.repositories
 
 import com.netsoftware.wallhaven.data.models.User
-import com.netsoftware.wallhaven.data.repositories.dataSources.local.UserDao
-import com.netsoftware.wallhaven.data.repositories.dataSources.remote.WallhavenApi
+import com.netsoftware.wallhaven.data.dataSources.local.UserDao
+import com.netsoftware.wallhaven.data.dataSources.remote.WallhavenApi
 import com.netsoftware.wallhaven.utility.managers.NetManager
 import io.reactivex.Single
 import javax.inject.Inject

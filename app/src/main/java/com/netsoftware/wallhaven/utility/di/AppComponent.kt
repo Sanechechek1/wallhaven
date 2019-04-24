@@ -4,8 +4,8 @@ import android.content.Context
 import com.google.gson.Gson
 import com.netsoftware.wallhaven.WallhavenApp
 import com.netsoftware.wallhaven.data.WallhavenDB
-import com.netsoftware.wallhaven.data.repositories.dataSources.local.SharedPrefs
-import com.netsoftware.wallhaven.data.repositories.dataSources.remote.WallhavenApi
+import com.netsoftware.wallhaven.data.dataSources.local.SharedPrefs
+import com.netsoftware.wallhaven.data.dataSources.remote.WallhavenApi
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector

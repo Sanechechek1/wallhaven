@@ -1,4 +1,4 @@
-package com.netsoftware.wallhaven.data.repositories.dataSources.local
+package com.netsoftware.wallhaven.data.dataSources.local
 
 import androidx.room.Dao
 import androidx.room.Insert

@@ -1,20 +1,17 @@
 package com.netsoftware.wallhaven.data
 
 import androidx.room.TypeConverter
-import com.google.gson.Gson
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
+import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import com.netsoftware.wallhaven.WallhavenApp
 import java.lang.reflect.Type
 import java.util.*
 
 
-class Converters{
+class Converters {
     @TypeConverter
     fun restoreList(listOfString: String): List<String> {
-        return Gson().fromJson(listOfString, object : TypeToken<List<String>>(){}.type)
+        return Gson().fromJson(listOfString, object : TypeToken<List<String>>() {}.type)
     }
 
     @TypeConverter
@@ -24,7 +21,7 @@ class Converters{
 
     @TypeConverter
     fun restoreMap(value: String): Map<String, String>? {
-        val mapType = object : TypeToken<Map<String, String>>(){}.type
+        val mapType = object : TypeToken<Map<String, String>>() {}.type
         return Gson().fromJson<Map<String, String>>(value, mapType)
     }
 
@@ -47,10 +44,22 @@ class Converters{
 
 class MyDeserializer<T> : JsonDeserializer<T> {
     override fun deserialize(je: JsonElement, type: Type, jdc: JsonDeserializationContext): T {
-        val content = je.asJsonObject.getAsJsonObject("data")
-        if(content.has("created_at")){
-            content.addProperty("created_at", content["created_at"].asJsonObject["date"].asString)
+        val unpackedContent =
+            when (val content = if (je.isJsonObject && je.asJsonObject.has("data")) je.asJsonObject["data"] else je) {
+                is JsonObject -> checkUnpackedDate(content)
+                is JsonArray -> content.asJsonArray.onEach { checkUnpackedDate(it.asJsonObject) }
+                else -> content
+            }
+        return WallhavenApp.appComponent.getGson().fromJson(unpackedContent, type)
+    }
+
+    private fun checkUnpackedDate(data: JsonObject): JsonObject {
+        if (data.has("created_at")) {
+            data.addProperty(
+                "created_at",
+                data["created_at"].asJsonObject["date"].asString
+            )
         }
-        return WallhavenApp.appComponent.getGson().fromJson(content, type)
+        return data
     }
 }

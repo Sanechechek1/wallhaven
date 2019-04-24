@@ -1,4 +1,4 @@
-package com.netsoftware.wallhaven.data.repositories.dataSources.local
+package com.netsoftware.wallhaven.data.dataSources.local
 
 import android.content.Context
 import com.chibatching.kotpref.KotprefModel
