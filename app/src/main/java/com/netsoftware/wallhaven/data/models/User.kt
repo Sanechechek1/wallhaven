@@ -33,9 +33,6 @@ data class User(
     @SerializedName("thumb_size")
     var thumbSize: String = THUMB_SMALL,
 
-    @SerializedName("per_page")
-    var wallPerPage: Int = 24,
-
     @SerializedName("toplist_range")
     var topListRange: String = TOPLIST_MONTH,
 
@@ -52,8 +49,8 @@ data class User(
     var aspectRatio: MutableList<String> = mutableListOf(),
 
     @SerializedName("tag_blacklist")
-    var tagBlackMutableList: MutableList<String> = mutableListOf(),
+    var tagBlackList: MutableList<String> = mutableListOf(),
 
     @SerializedName("user_blacklist")
-    var userBlockMutableList: MutableList<String> = mutableListOf()
+    var userBlockList: MutableList<String> = mutableListOf()
 )

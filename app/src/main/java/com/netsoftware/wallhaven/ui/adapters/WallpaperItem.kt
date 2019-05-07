@@ -1,16 +1,17 @@
 package com.netsoftware.wallhaven.ui.adapters
 
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintSet
 import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.data.models.Wallpaper
 import com.netsoftware.wallhaven.databinding.RvItemViewerBinding
+import com.netsoftware.wallhaven.utility.managers.MyDisplayManager
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.davidea.viewholders.FlexibleViewHolder
 
-
-class WallpaperItem(private val wallpaper: Wallpaper) : AbstractFlexibleItem<WallpaperItem.WallpapersViewHolder>() {
+class WallpaperItem(private var wallpaper: Wallpaper) : AbstractFlexibleItem<WallpaperItem.WallpapersViewHolder>() {
 
     override fun equals(other: Any?): Boolean {
         return if (other is Wallpaper) {
@@ -33,20 +34,24 @@ class WallpaperItem(private val wallpaper: Wallpaper) : AbstractFlexibleItem<Wal
         position: Int,
         payloads: List<Any>
     ) {
-        holder.bind(position)
+        holder.bind(position, wallpaper)
     }
 
 
     inner class WallpapersViewHolder(private val binding: RvItemViewerBinding, adapter: FlexibleAdapter<*>) :
         FlexibleViewHolder(binding.root, adapter) {
 
-        fun bind(position: Int) {
-            binding.wallpaper = this@WallpaperItem.wallpaper
-//            viewModel.fetchDogBreedImagesAt(position)
-//            binding.setVariable(BR.viewModel, viewModel)
-//            binding.setVariable(BR.position, position)
-            binding.executePendingBindings()
-        }
+        fun bind(position: Int, wallpaper: Wallpaper) {
+            with(binding) {
+                val set = ConstraintSet()
+                set.clone(container)
+                set.setDimensionRatio(ivThumbnail.id, wallpaper.ratio.replace(MyDisplayManager.resolutionDelimiter, ":"))
+                set.applyTo(container)
+                binding.wallpaper = wallpaper
+                binding.executePendingBindings()
+            }
 
+        }
     }
 }
+

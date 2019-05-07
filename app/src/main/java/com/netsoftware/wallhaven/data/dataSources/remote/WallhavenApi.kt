@@ -21,7 +21,6 @@ interface WallhavenApi {
     @GET("search")
     fun getSearch(
         @Query("apikey") userApiKey: String? = null,
-//        @Query("categories") categories: Int? = null,
         @QueryMap searchMap: Map<String, String>
     ):Single<MutableList<Wallpaper>>
 }

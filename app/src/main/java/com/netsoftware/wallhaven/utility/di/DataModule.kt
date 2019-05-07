@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken
 import com.netsoftware.wallhaven.data.MyDeserializer
 import com.netsoftware.wallhaven.data.WallhavenDB
 import com.netsoftware.wallhaven.data.dataSources.local.UserDao
+import com.netsoftware.wallhaven.data.dataSources.local.WallpaperDao
 import com.netsoftware.wallhaven.data.dataSources.remote.WallhavenApi
 import com.netsoftware.wallhaven.data.models.User
 import com.netsoftware.wallhaven.data.models.Wallpaper
@@ -36,8 +37,14 @@ class DataModule{
 
     @Singleton
     @Provides
-    fun providesProductDao(demoDatabase: WallhavenDB): UserDao {
-        return demoDatabase.userDao()
+    fun providesUserDao(database: WallhavenDB): UserDao {
+        return database.userDao()
+    }
+
+    @Singleton
+    @Provides
+    fun providesWallpaperDao(database: WallhavenDB): WallpaperDao {
+        return database.wallpaperDao()
     }
 
     @Provides

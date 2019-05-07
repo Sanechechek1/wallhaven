@@ -6,6 +6,8 @@ import com.netsoftware.wallhaven.WallhavenApp
 import com.netsoftware.wallhaven.data.WallhavenDB
 import com.netsoftware.wallhaven.data.dataSources.local.SharedPrefs
 import com.netsoftware.wallhaven.data.dataSources.remote.WallhavenApi
+import com.netsoftware.wallhaven.data.repositories.UserRepository
+import com.netsoftware.wallhaven.data.repositories.WallpaperRepository
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -38,4 +40,6 @@ interface AppComponent : AndroidInjector<WallhavenApp> {
     fun getSharedPrefs(): SharedPrefs
     fun getAppContext(): Context
     fun getWallhavenApi(): WallhavenApi
+    fun getUserRepository(): UserRepository
+    fun getWallpaperRepository(): WallpaperRepository
 }

@@ -1,5 +1,6 @@
 package com.netsoftware.wallhaven.data.models
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
@@ -16,7 +17,9 @@ data class Wallpaper(
     @SerializedName("path")
     var url: String = "",
 
+    //TODO: Change to normal relation
     @SerializedName("uploader")
+    @Embedded(prefix = "user_")
     var uploader: User = User(),
 
     var views: Int = 0,
@@ -36,7 +39,7 @@ data class Wallpaper(
     var ratio: String = MyDisplayManager.findRatio(resolution),
 
     @SerializedName("file_size")
-    var fileSize: Long = 0L,
+    var fileSize: String = "",
 
     @SerializedName("file_type")
     var fileType: String = "",

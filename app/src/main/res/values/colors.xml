@@ -7,6 +7,7 @@
     <color name="white">#F0E9E9</color>
     <color name="light_icon_tint">#9EFFFFFF</color>
     <color name="dark_icon_tint">#1a1a1a</color>
+    <color name="image_border">#464646</color>
 
     <!-- OVERWRITE THESE COLORS FOR THEME -->
     <!-- MaterialDrawer DEFAULT colors -->

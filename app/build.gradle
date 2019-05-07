@@ -107,4 +107,10 @@ dependencies {
     //FlexibleAdapter
     implementation 'eu.davidea:flexible-adapter:5.1.0'
     implementation 'eu.davidea:flexible-adapter-ui:1.0.0'
+
+    //Scrapper
+    implementation 'in.nerd-is:wallhaven4kotlin:0.1.1'
+
+    //ProgressBar
+    implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
 }
