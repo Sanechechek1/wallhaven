@@ -4,4 +4,5 @@
     <dimen name="icon_size">52dp</dimen>
     <dimen name="iicon_size">22dp</dimen>
     <dimen name="image_border">10dp</dimen>
+    <dimen name="viewer_item_corner_radius">10dp</dimen>
 </resources>

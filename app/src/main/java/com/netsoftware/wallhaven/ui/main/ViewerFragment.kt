@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.WallhavenApp.Companion.TAG
-import com.netsoftware.wallhaven.databinding.MainFragmentBinding
+import com.netsoftware.wallhaven.databinding.ViewerFragmentBinding
 import com.netsoftware.wallhaven.ui.adapters.ProgressItem
 import com.netsoftware.wallhaven.ui.adapters.WallpaperItem
 import dagger.android.support.DaggerFragment
@@ -25,7 +25,7 @@ import javax.inject.Inject
 class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var binding: MainFragmentBinding
+    private lateinit var binding: ViewerFragmentBinding
     private val compositeDisposable = CompositeDisposable()
     private val adapter = FlexibleAdapter<IFlexible<*>>(mutableListOf(), null, true)
 
@@ -33,11 +33,15 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.main_fragment, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.viewer_fragment, container, false)
         binding.viewModel = ViewModelProviders.of(this, viewModelFactory).get(ViewerViewModel::class.java)
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel?.setType(arguments?.let { ViewerFragmentArgs.fromBundle(it).viewerType }
+            ?: ViewerViewModel.ViewerType.LATEST_TYPE
+        )
 
         adapter.setEndlessScrollListener(this, ProgressItem())
+            .setEndlessScrollThreshold(8)
             .endlessPageSize = 24
         binding.recyclerView.adapter = this.adapter
         binding.recyclerView.layoutManager = SmoothScrollStaggeredLayoutManager(context, 2)
@@ -47,12 +51,14 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener {
                 .withEdge(true)
         )
 
+        binding.toolbarTitle.text = arguments?.let { getString(ViewerFragmentArgs.fromBundle(it).viewerType.titleId) }
         binding.toolbarMenuIcon.setOnClickListener { (activity as MainActivity).openDrawer() }
         binding.toolbarFilterIcon.setOnClickListener { binding.viewModel?.loadLatest() }
         binding.viewModel?.getFetchedWalls()?.observe(
             viewLifecycleOwner,
             Observer {
-                adapter.updateDataSet(it.map { wall -> WallpaperItem(wall) })
+                if (adapter.itemCount == 0) adapter.updateDataSet(it.map { wall -> WallpaperItem(wall) })
+                else adapter.onLoadMoreComplete(it.map { wall -> WallpaperItem(wall) })
             })
         return binding.root
     }
@@ -64,7 +70,7 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener {
     }
 
     override fun onLoadMore(lastPosition: Int, currentPage: Int) {
-        binding.viewModel?.loadLatest(currentPage)
+        binding.viewModel?.loadLatest(currentPage + 1)
         Log.d(TAG, "onLoadMore: lastPosition=$lastPosition")
         Log.d(TAG, "onLoadMore: currentPage=$currentPage")
         Log.d(TAG, "onLoadMore: Total pages loaded=${adapter.endlessCurrentPage}")
@@ -74,9 +80,5 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.dispose()
-    }
-
-    companion object {
-        fun newInstance() = ViewerFragment()
     }
 }

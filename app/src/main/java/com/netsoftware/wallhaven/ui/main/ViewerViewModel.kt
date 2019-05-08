@@ -3,6 +3,7 @@ package com.netsoftware.wallhaven.ui.main
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.WallhavenApp
 import com.netsoftware.wallhaven.data.models.SearchConfig
 import com.netsoftware.wallhaven.data.models.Wallpaper
@@ -19,26 +20,62 @@ class ViewerViewModel @Inject constructor(
     private val wallpaperRepository: WallpaperRepository
 ): BaseViewModel() {
     private val walls = mutableListOf<Wallpaper>()
-    private val wallsLiveData = MutableLiveData(walls)
+    private val wallsLiveData = MutableLiveData(listOf<Wallpaper>())
     private val isLoading = MutableLiveData(false)
-//    private var currentPage = 1
+    private var type: ViewerType = ViewerType.LATEST_TYPE
 
-    init {
-//        loadLatest()
-    }
-
-    fun getFetchedWalls(): LiveData<MutableList<Wallpaper>> = wallsLiveData
+    fun getFetchedWalls(): LiveData<List<Wallpaper>> = wallsLiveData
     fun isLoading(): LiveData<Boolean> = isLoading
 
-    fun loadLatest(page: Int = 1){
+    fun setType(type: ViewerType){
+        this.type = type
         isLoading.value = true
+        when(type){
+            ViewerType.LATEST_TYPE -> loadLatest()
+            ViewerType.TOPLIST_TYPE -> loadToplist()
+            ViewerType.RANDOM_TYPE -> loadRandom()
+            ViewerType.FAVORITES_TYPE -> TODO()
+        }
+    }
+
+    fun loadLatest(page: Int = 1){
         wallpaperRepository.getLatest(SearchConfig(page = page.toString()))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doFinally { isLoading.value = false }
             .subscribe({
-                walls.addAll(walls.size, it)
-                wallsLiveData.value = walls
+                walls.addAll(it)
+                wallsLiveData.value = it
+            },{
+                Log.d(WallhavenApp.TAG, "onCreateView: error = $it")
+                it.printStackTrace()
+            })
+            .addTo(compositeDisposable)
+    }
+
+    fun loadToplist(page: Int = 1){
+        wallpaperRepository.getTopList(SearchConfig(page = page.toString()))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doFinally { isLoading.value = false }
+            .subscribe({
+                walls.addAll(it)
+                wallsLiveData.value = it
+            },{
+                Log.d(WallhavenApp.TAG, "onCreateView: error = $it")
+                it.printStackTrace()
+            })
+            .addTo(compositeDisposable)
+    }
+
+    fun loadRandom(page: Int = 1){
+        wallpaperRepository.getRandom(SearchConfig(page = page.toString()))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doFinally { isLoading.value = false }
+            .subscribe({
+                walls.addAll(it)
+                wallsLiveData.value = it
             },{
                 Log.d(WallhavenApp.TAG, "onCreateView: error = $it")
                 it.printStackTrace()
@@ -61,5 +98,11 @@ class ViewerViewModel @Inject constructor(
                     Log.d(WallhavenApp.TAG, "onCreateView: $it")
                 }
             ).addTo(compositeDisposable)
+    }
+    enum class ViewerType(val titleId: Int) {
+        LATEST_TYPE(R.string.title_latest),
+        TOPLIST_TYPE(R.string.title_toplist),
+        RANDOM_TYPE(R.string.title_random),
+        FAVORITES_TYPE(R.string.title_favorites)
     }
 }

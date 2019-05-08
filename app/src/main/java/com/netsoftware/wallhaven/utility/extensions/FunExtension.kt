@@ -8,10 +8,14 @@ import com.netsoftware.wallhaven.utility.managers.MyDisplayManager
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-fun Disposable.addTo(compositeDisposable: CompositeDisposable): Disposable
-        = apply { compositeDisposable.add(this)}
+val Int.pxToDp: Int
+    get() = (this / Resources.getSystem().displayMetrics.density).toInt()
+val Int.dpToPx: Int
+    get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
-fun `in`.nerd_is.wallhaven4kotlin.model.Wallpaper.convert(): Wallpaper{
+fun Disposable.addTo(compositeDisposable: CompositeDisposable): Disposable = apply { compositeDisposable.add(this) }
+
+fun `in`.nerd_is.wallhaven4kotlin.model.Wallpaper.convert(): Wallpaper {
     return Wallpaper(
         id = this.id.toString(),
         url = this.fullUrl,
@@ -26,12 +30,7 @@ fun `in`.nerd_is.wallhaven4kotlin.model.Wallpaper.convert(): Wallpaper{
             avatars = mutableMapOf("32px" to this.uploader.avatarThumbnail),
             name = this.uploader.name
         ),
-        colors = this.colors.map { String.format("#%02x%02x%02x", it.r, it.g, it.b)}.toMutableList(),
+        colors = this.colors.map { String.format("#%02x%02x%02x", it.r, it.g, it.b) }.toMutableList(),
         thumbs = mutableMapOf(THUMB_ORIGINAL to this.thumbnailUrl)
     )
 }
-
-val Int.pxToDp: Int
-    get() = (this / Resources.getSystem().displayMetrics.density).toInt()
-val Int.dpToPx: Int
-    get() = (this * Resources.getSystem().displayMetrics.density).toInt()

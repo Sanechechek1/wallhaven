@@ -36,37 +36,55 @@
                 app:contentInsetStart="0dp"
                 app:layout_scrollFlags="scroll|enterAlways|snap">
 
-                <com.mikepenz.iconics.view.IconicsImageButton
-                    android:id="@+id/toolbar_menu_icon"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="@dimen/icon_size"
-                    android:layout_height="@dimen/icon_size"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="5dp"
-                    app:iiv_color="@color/dark_icon_tint"
-                    app:iiv_icon="esp-menu-2"
-                    app:iiv_size="@dimen/iicon_size" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/toolbar_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="20dp"
-                    android:text="Latest"
-                    android:textColor="@color/dark_icon_tint"
-                    android:textSize="24sp" />
+                    <com.mikepenz.iconics.view.IconicsImageButton
+                        android:id="@+id/toolbar_menu_icon"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
+                        android:layout_marginStart="5dp"
+                        app:iiv_color="@color/dark_icon_tint"
+                        app:iiv_icon="esp-menu-2"
+                        app:iiv_size="@dimen/iicon_size"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        />
 
-                <com.mikepenz.iconics.view.IconicsImageButton
-                    android:id="@+id/toolbar_filter_icon"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="@dimen/icon_size"
-                    android:layout_height="@dimen/icon_size"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="5dp"
-                    app:iiv_color="@color/dark_icon_tint"
-                    app:iiv_icon="esp-controls"
-                    app:iiv_size="@dimen/iicon_size" />
+                    <TextView
+                        android:id="@+id/toolbar_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:textColor="@color/dark_icon_tint"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/toolbar_filter_icon"
+                        app:layout_constraintStart_toEndOf="@id/toolbar_menu_icon"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Latest" />
+
+                    <com.mikepenz.iconics.view.IconicsImageButton
+                        android:id="@+id/toolbar_filter_icon"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
+                        android:layout_gravity="end"
+                        android:layout_marginEnd="5dp"
+                        app:iiv_color="@color/dark_icon_tint"
+                        app:iiv_icon="esp-controls"
+                        app:iiv_size="@dimen/iicon_size"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -76,7 +94,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/material_drawer_background"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:itemCount="2"
+            tools:listitem="@layout/rv_item_viewer" />
 
         <me.zhanghai.android.materialprogressbar.MaterialProgressBar
             style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding"
