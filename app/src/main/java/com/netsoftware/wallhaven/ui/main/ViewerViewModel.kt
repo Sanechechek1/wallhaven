@@ -37,42 +37,26 @@ class ViewerViewModel @Inject constructor(
         } else page.value = walls
     }
 
-    fun refresh() {
-        walls.clear()
-        page.value = listOf()
-        loadByType(type)
-    }
-
     private fun loadByType(type: ViewerType) {
         when (type) {
-            ViewerType.SUITABLE_TYPE, ViewerType.SEARCH_TYPE -> loadSearch()
-            ViewerType.LATEST_TYPE -> loadLatest()
+            //TODO: Think how need to sort suitable
+            ViewerType.LATEST_TYPE, ViewerType.SUITABLE_TYPE -> loadLatest()
             ViewerType.TOPLIST_TYPE -> loadToplist()
             ViewerType.RANDOM_TYPE -> loadRandom()
             ViewerType.FAVORITES_TYPE -> TODO()
         }
     }
 
-    fun loadSearch(page: Int = 1) {
-        isLoading.value = true
-        wallpaperRepository.getLatest(searchConfig.copy(page = page.toString()))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doFinally { isLoading.value = false }
-            .retry(2)
-            .subscribe({
-                walls.addAll(it)
-                this.page.value = it
-            }, {
-                Log.d(WallhavenApp.TAG, "loadSearch: error = $it")
-                it.printStackTrace()
-            })
-            .addTo(compositeDisposable)
+    fun refresh() {
+        walls.clear()
+        page.value = listOf()
+        loadByType(type)
     }
 
     fun loadLatest(page: Int = 1) {
         isLoading.value = true
         wallpaperRepository.getLatest(searchConfig.copy(page = page.toString()))
+                //TODO: extract duplicated configuration
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doFinally { isLoading.value = false }
@@ -143,7 +127,6 @@ class ViewerViewModel @Inject constructor(
         LATEST_TYPE(R.string.title_latest),
         TOPLIST_TYPE(R.string.title_toplist),
         RANDOM_TYPE(R.string.title_random),
-        FAVORITES_TYPE(R.string.title_favorites),
-        SEARCH_TYPE(R.string.title_search)
+        FAVORITES_TYPE(R.string.title_favorites)
     }
 }

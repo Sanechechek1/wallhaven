@@ -46,31 +46,28 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
     private lateinit var binding: ViewerFragmentBinding
     private val compositeDisposable = CompositeDisposable()
     private val adapter = FlexibleAdapter<IFlexible<*>>(mutableListOf(), this, true)
+    private val viewerType = arguments?.let { ViewerFragmentArgs.fromBundle(it).viewerType } ?: SUITABLE_TYPE
     private var currentImage = -1
+
     private lateinit var imageViewer: StfalconImageViewer<Wallpaper>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        //TODO: search will change searchConfig in viewModel and invoke refresh()
+        val searchQuery = arguments?.let { ViewerFragmentArgs.fromBundle(it).searchQuery } ?: ""
         binding = DataBindingUtil.inflate(inflater, R.layout.viewer_fragment, container, false)
         binding.viewModel = ViewModelProviders.of(this, viewModelFactory).get(ViewerViewModel::class.java)
         binding.lifecycleOwner = viewLifecycleOwner
-        //TODO()
-//        if( arguments?.let { ViewerFragmentArgs.fromBundle(it).searchQuery}.isNotEmpty()){
-//
-//        }
-//        searchConfig = SearchConfig(q = arguments?.let { ViewerFragmentArgs.fromBundle(it).searchQuery } ?: "",
-//            resolution_at_least = WallhavenApp.appComponent.getSharedPrefs().screenResolution,
-//            ratios = WallhavenApp.appComponent.getSharedPrefs().screenRatio
-//        )
-        binding.viewModel?.init( arguments?.let { ViewerFragmentArgs.fromBundle(it).viewerType } ?: SUITABLE_TYPE)
 
-        initRecyclerView()
+        binding.viewModel?.init(viewerType,
+            SearchConfig(q = searchQuery,
+                resolution_at_least = WallhavenApp.appComponent.getSharedPrefs().screenResolution,
+                ratios = WallhavenApp.appComponent.getSharedPrefs().screenRatio
+            ))
 
-        binding.toolbarTitle.text = arguments?.let {
-            getString(ViewerFragmentArgs.fromBundle(it).viewerType.titleId).format(binding.viewModel?.query)
-        }
+        binding.toolbarTitle.text = getString(viewerType.titleId).format(searchQuery)
         binding.toolbarMenuIcon.setOnClickListener { (activity as MainActivity).openDrawer() }
         binding.refreshLayout.setColorSchemeResources(
             R.color.material_drawer_background, R.color.lime, R.color.orange, R.color.blue
@@ -79,8 +76,10 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
         binding.refreshLayout.setProgressBackgroundColorSchemeColor(
             resources.getColor(R.color.colorPrimary, context?.theme)
         )
-
         binding.refreshLayout.isRefreshing = true
+
+        initRecyclerView()
+
         binding.viewModel?.getPage()?.observe(
             viewLifecycleOwner,
             Observer {
