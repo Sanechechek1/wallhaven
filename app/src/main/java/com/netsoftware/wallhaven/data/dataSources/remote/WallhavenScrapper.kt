@@ -4,8 +4,12 @@ import `in`.nerd_is.wallhaven4kotlin.scrape.Scrape
 import com.netsoftware.wallhaven.data.models.SearchConfig
 import com.netsoftware.wallhaven.data.models.THUMB_ORIGINAL
 import com.netsoftware.wallhaven.data.models.Wallpaper
+import com.netsoftware.wallhaven.utility.extensions.UrlHandler
+import com.netsoftware.wallhaven.utility.extensions.convert
 import com.netsoftware.wallhaven.utility.managers.MyDisplayManager
 import okhttp3.HttpUrl
+import java.io.InterruptedIOException
+import java.net.SocketTimeoutException
 
 object WallhavenScrapper {
     private val base = HttpUrl.parse("https://alpha.wallhaven.cc")!!
@@ -32,17 +36,25 @@ object WallhavenScrapper {
 
 
     fun search(searchConfig: SearchConfig): List<Wallpaper> {
-        return Scrape.scrapeList(
-            createQuery(
-                searchConfig
-            )
-        ).map {
-            Wallpaper(
-                id = it.id.toString(),
-                resolution = MyDisplayManager.getResolution(it.resolution.width, it.resolution.height),
-                thumbs = mutableMapOf(THUMB_ORIGINAL to it.thumbnailUrl)
-            )
+        var result = listOf<Wallpaper>()
+        try {
+            result = Scrape.scrapeList(
+                createQuery(
+                    searchConfig
+                )
+            ).map {
+                Wallpaper(
+                    id = it.id.toString(),
+                    resolution = MyDisplayManager.getResolution(it.resolution.width, it.resolution.height),
+                    thumbs = mutableMapOf(THUMB_ORIGINAL to it.thumbnailUrl),
+                    category = it.category.name,
+                    purity = it.purity.name
+                )
+            }
+        } catch (e: InterruptedIOException){
+            if(e is SocketTimeoutException){ throw e}
         }
+        return result
     }
 
     fun latest(searchConfig: SearchConfig): List<Wallpaper> {
@@ -55,5 +67,9 @@ object WallhavenScrapper {
 
     fun random(searchConfig: SearchConfig): List<Wallpaper> {
         return search(searchConfig.copy(sorting = SearchConfig.SORTING_RANDOM))
+    }
+
+    fun wallpaper(id: String): Wallpaper{
+        return id.toLongOrNull()?.let { Scrape.scrapeWallpaper(UrlHandler.fromWallpaperId(it)) }?.convert() ?: Wallpaper(id = id)
     }
 }

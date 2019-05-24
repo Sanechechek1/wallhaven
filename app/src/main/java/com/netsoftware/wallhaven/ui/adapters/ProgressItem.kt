@@ -1,19 +1,16 @@
 package com.netsoftware.wallhaven.ui.adapters
 
-import android.animation.Animator
 import android.view.View
-import android.widget.ProgressBar
 import com.netsoftware.wallhaven.R
-import com.netsoftware.wallhaven.databinding.RvItemLoaderBinding
+import com.netsoftware.wallhaven.ui.adapters.ProgressItem.StatusEnum.*
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.Payload
-import eu.davidea.flexibleadapter.helpers.AnimatorHelper
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.davidea.viewholders.FlexibleViewHolder
 
 class ProgressItem : AbstractFlexibleItem<ProgressItem.ProgressViewHolder>() {
-    private var status = StatusEnum.MORE_TO_LOAD
+    private var status = MORE_TO_LOAD
 
     override fun equals(other: Any?): Boolean {
         return this === other
@@ -36,38 +33,23 @@ class ProgressItem : AbstractFlexibleItem<ProgressItem.ProgressViewHolder>() {
     }
 
     override fun createViewHolder(view: View, adapter: FlexibleAdapter<IFlexible<*>>): ProgressViewHolder =
-        ProgressViewHolder(RvItemLoaderBinding.bind(view), adapter)
+        ProgressViewHolder(view, adapter)
 
     override fun bindViewHolder(
         adapter: FlexibleAdapter<IFlexible<*>>, holder: ProgressViewHolder,
         position: Int, payloads: List<*>
     ) {
         if (!adapter.isEndlessScrollEnabled) {
-            setStatus(StatusEnum.DISABLE_ENDLESS)
+            setStatus(DISABLE_ENDLESS)
         } else if (payloads.contains(Payload.NO_MORE_LOAD)) {
-            setStatus(StatusEnum.NO_MORE_LOAD)
+            setStatus(NO_MORE_LOAD)
         }
 
-        when (this.status) {
-            StatusEnum.NO_MORE_LOAD, StatusEnum.ON_CANCEL, StatusEnum.ON_ERROR -> {
-                setStatus(StatusEnum.MORE_TO_LOAD)
-                holder.progressBar.visibility = View.GONE
-            }
-            StatusEnum.DISABLE_ENDLESS -> {
-                holder.progressBar.visibility = View.GONE
-            }
-            StatusEnum.MORE_TO_LOAD -> holder.progressBar.visibility = View.VISIBLE
-        }
+        if (status == NO_MORE_LOAD || status == ON_CANCEL || status == ON_ERROR) setStatus(MORE_TO_LOAD)
     }
 
-    class ProgressViewHolder(binding: RvItemLoaderBinding, adapter: FlexibleAdapter<*>) :
-        FlexibleViewHolder(binding.root, adapter) {
-        var progressBar: ProgressBar = binding.progressBar
-
-        override fun scrollAnimators(animators: List<Animator>, position: Int, isForward: Boolean) {
-            AnimatorHelper.scaleAnimator(animators, itemView, 0f)
-        }
-    }
+    class ProgressViewHolder(view: View, adapter: FlexibleAdapter<*>) :
+        FlexibleViewHolder(view, adapter)
 
     enum class StatusEnum {
         MORE_TO_LOAD, //Default = should have an empty Payload

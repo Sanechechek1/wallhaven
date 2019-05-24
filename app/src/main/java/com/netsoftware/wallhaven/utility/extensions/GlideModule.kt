@@ -1,4 +1,4 @@
-package com.netsoftware.wallhaven.ui.bindings
+package com.netsoftware.wallhaven.utility.extensions
 
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule

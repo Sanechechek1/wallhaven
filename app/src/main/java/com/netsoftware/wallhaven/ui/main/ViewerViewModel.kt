@@ -18,19 +18,34 @@ import javax.inject.Inject
 class ViewerViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val wallpaperRepository: WallpaperRepository
-): BaseViewModel() {
+) : BaseViewModel() {
     private val walls = mutableListOf<Wallpaper>()
-    private val wallsLiveData = MutableLiveData(listOf<Wallpaper>())
+    private val page = MutableLiveData(listOf<Wallpaper>())
     private val isLoading = MutableLiveData(false)
-    private var type: ViewerType = ViewerType.LATEST_TYPE
+    private var type: ViewerType = ViewerType.SUITABLE_TYPE
+    private var searchConfig: SearchConfig = SearchConfig()
 
-    fun getFetchedWalls(): LiveData<List<Wallpaper>> = wallsLiveData
+    fun getWalls(): List<Wallpaper> = walls
+    fun getPage(): LiveData<List<Wallpaper>> = page
     fun isLoading(): LiveData<Boolean> = isLoading
 
-    fun setType(type: ViewerType){
+    fun init(type: ViewerType, searchConfig: SearchConfig = SearchConfig()){
         this.type = type
-        isLoading.value = true
-        when(type){
+        this.searchConfig = searchConfig
+        if (walls.isEmpty()) {
+            loadByType(type)
+        } else page.value = walls
+    }
+
+    fun refresh() {
+        walls.clear()
+        page.value = listOf()
+        loadByType(type)
+    }
+
+    private fun loadByType(type: ViewerType) {
+        when (type) {
+            ViewerType.SUITABLE_TYPE, ViewerType.SEARCH_TYPE -> loadSearch()
             ViewerType.LATEST_TYPE -> loadLatest()
             ViewerType.TOPLIST_TYPE -> loadToplist()
             ViewerType.RANDOM_TYPE -> loadRandom()
@@ -38,71 +53,97 @@ class ViewerViewModel @Inject constructor(
         }
     }
 
-    fun loadLatest(page: Int = 1){
-        wallpaperRepository.getLatest(SearchConfig(page = page.toString()))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doFinally { isLoading.value = false }
-            .subscribe({
-                walls.addAll(it)
-                wallsLiveData.value = it
-            },{
-                Log.d(WallhavenApp.TAG, "onCreateView: error = $it")
-                it.printStackTrace()
-            })
-            .addTo(compositeDisposable)
-    }
-
-    fun loadToplist(page: Int = 1){
-        wallpaperRepository.getTopList(SearchConfig(page = page.toString()))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doFinally { isLoading.value = false }
-            .subscribe({
-                walls.addAll(it)
-                wallsLiveData.value = it
-            },{
-                Log.d(WallhavenApp.TAG, "onCreateView: error = $it")
-                it.printStackTrace()
-            })
-            .addTo(compositeDisposable)
-    }
-
-    fun loadRandom(page: Int = 1){
-        wallpaperRepository.getRandom(SearchConfig(page = page.toString()))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doFinally { isLoading.value = false }
-            .subscribe({
-                walls.addAll(it)
-                wallsLiveData.value = it
-            },{
-                Log.d(WallhavenApp.TAG, "onCreateView: error = $it")
-                it.printStackTrace()
-            })
-            .addTo(compositeDisposable)
-    }
-
-    fun refreshData(){
+    fun loadSearch(page: Int = 1) {
         isLoading.value = true
-        userRepository.getUser(1).subscribeOn(Schedulers.io())
+        wallpaperRepository.getLatest(searchConfig.copy(page = page.toString()))
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doFinally {
-                isLoading.value = false
-            }
-            .subscribe(
-                {
-                    Log.d(WallhavenApp.TAG, "onCreateView: $it ${Thread.currentThread().name}")
-                },
-                {
-                    Log.d(WallhavenApp.TAG, "onCreateView: $it")
-                }
-            ).addTo(compositeDisposable)
+            .doFinally { isLoading.value = false }
+            .retry(2)
+            .subscribe({
+                walls.addAll(it)
+                this.page.value = it
+            }, {
+                Log.d(WallhavenApp.TAG, "loadSearch: error = $it")
+                it.printStackTrace()
+            })
+            .addTo(compositeDisposable)
     }
+
+    fun loadLatest(page: Int = 1) {
+        isLoading.value = true
+        wallpaperRepository.getLatest(searchConfig.copy(page = page.toString()))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doFinally { isLoading.value = false }
+            .retry(2)
+            .subscribe({
+                walls.addAll(it)
+                this.page.value = it
+            }, {
+                Log.d(WallhavenApp.TAG, "loadLatest: error = $it")
+                it.printStackTrace()
+            })
+            .addTo(compositeDisposable)
+    }
+
+    fun loadToplist(page: Int = 1) {
+        isLoading.value = true
+        wallpaperRepository.getTopList(searchConfig.copy(page = page.toString()))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doFinally { isLoading.value = false }
+            .retry(2)
+            .subscribe({
+                walls.addAll(it)
+                this.page.value = it
+            }, {
+                Log.d(WallhavenApp.TAG, "loadToplist: error = $it")
+                it.printStackTrace()
+            })
+            .addTo(compositeDisposable)
+    }
+
+    fun loadRandom(page: Int = 1) {
+        isLoading.value = true
+        wallpaperRepository.getRandom(searchConfig.copy(page = page.toString()))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doFinally { isLoading.value = false }
+            .retry(2)
+            .subscribe({
+                walls.addAll(it)
+                this.page.value = it
+            }, {
+                Log.d(WallhavenApp.TAG, "loadRandom: error = $it")
+                it.printStackTrace()
+            })
+            .addTo(compositeDisposable)
+    }
+
+    fun fetchDetails(position: Int, callback: (wall: Wallpaper) -> Unit) {
+        if (position >= 0 && position < walls.size && walls[position].url.isEmpty()) {
+            wallpaperRepository.getWallpaper(walls[position].id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .retry(2)
+                .subscribe({
+                    walls[position] = it
+                    callback(it)
+                }, {
+                    Log.d(WallhavenApp.TAG, "fetchDetails: error = $it")
+                    it.printStackTrace()
+                })
+                .addTo(compositeDisposable)
+        }
+    }
+
     enum class ViewerType(val titleId: Int) {
+        SUITABLE_TYPE(R.string.title_suitable),
         LATEST_TYPE(R.string.title_latest),
         TOPLIST_TYPE(R.string.title_toplist),
         RANDOM_TYPE(R.string.title_random),
-        FAVORITES_TYPE(R.string.title_favorites)
+        FAVORITES_TYPE(R.string.title_favorites),
+        SEARCH_TYPE(R.string.title_search)
     }
 }

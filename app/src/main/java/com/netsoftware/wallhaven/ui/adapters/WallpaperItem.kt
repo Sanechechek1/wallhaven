@@ -34,14 +34,13 @@ class WallpaperItem(private var wallpaper: Wallpaper) : AbstractFlexibleItem<Wal
         position: Int,
         payloads: List<Any>
     ) {
-        holder.bind(position, wallpaper)
+        holder.bind(wallpaper)
     }
 
-
-    inner class WallpapersViewHolder(private val binding: RvItemViewerBinding, adapter: FlexibleAdapter<*>) :
+    inner class WallpapersViewHolder(val binding: RvItemViewerBinding, adapter: FlexibleAdapter<*>) :
         FlexibleViewHolder(binding.root, adapter) {
 
-        fun bind(position: Int, wallpaper: Wallpaper) {
+        fun bind(wallpaper: Wallpaper) {
             with(binding) {
                 val set = ConstraintSet()
                 set.clone(container)

@@ -3,6 +3,7 @@ package com.netsoftware.wallhaven.data.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import com.netsoftware.wallhaven.data.dataSources.local.SharedPrefs
 
 const val THUMB_SMALL = "small"
 const val THUMB_ORIGINAL = "original"
@@ -31,7 +32,7 @@ data class User(
     var avatars: MutableMap<String, String> = mutableMapOf(),
 
     @SerializedName("thumb_size")
-    var thumbSize: String = THUMB_SMALL,
+    var thumbSize: String = SharedPrefs.getSharedPrefs().thumbSize,
 
     @SerializedName("toplist_range")
     var topListRange: String = TOPLIST_MONTH,

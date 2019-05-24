@@ -17,7 +17,7 @@ interface WallpaperDao{
     fun getWallpaper(id: String): Maybe<Wallpaper>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(wallpaper: Wallpaper)
+    fun insert(wallpaper: Wallpaper) : Single<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun simpleInsert(wallpaper: Wallpaper)

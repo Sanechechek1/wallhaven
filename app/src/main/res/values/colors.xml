@@ -8,10 +8,14 @@
     <color name="light_icon_tint">#9EFFFFFF</color>
     <color name="dark_icon_tint">#1a1a1a</color>
     <color name="image_border">#464646</color>
+    <color name="blue">#00b8d4</color>
+    <color name="lime">#CDDC39</color>
+    <color name="orange">#ffab00</color>
 
     <!-- OVERWRITE THESE COLORS FOR THEME -->
     <!-- MaterialDrawer DEFAULT colors -->
     <color name="material_drawer_background">#1a1a1a</color>
+    <color name="material_drawer_background_alpha">#991A1A1A</color>
     <!-- Material DEFAULT text / items colors -->
     <color name="material_drawer_primary_text">#DEFFFFFF</color>
     <color name="material_drawer_primary_icon">@color/light_icon_tint</color>

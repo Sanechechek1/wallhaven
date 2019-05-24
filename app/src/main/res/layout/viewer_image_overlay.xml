@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="wall"
+            type="com.netsoftware.wallhaven.data.models.Wallpaper" />
+        <variable
+            name="chipClick"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="isLoading"
+            type="androidx.lifecycle.MutableLiveData&lt;Boolean&gt;" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_overlay_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/material_drawer_background_alpha"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:indeterminate="true"
+            android:visibility="@{safeUnbox(isLoading) ? View.VISIBLE : View.GONE}"
+            app:mpb_indeterminateTint="@color/colorPrimary"
+            app:mpb_progressStyle="horizontal"
+            app:mpb_useIntrinsicPadding="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <HorizontalScrollView
+            android:id="@+id/detail_tag_container"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop = "10dp"
+            tools:layout_height="40dp"
+            android:scrollbars="none"
+            >
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/tag_chips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="4dp"
+                app:singleLine="true"
+                app:singleSelection="true"
+                app:chips = "@{wall.tags}"
+                app:chipClick = "@{chipClick}"
+                />
+        </HorizontalScrollView>
+
+        <TextView
+            style="@style/details_text"
+            android:id="@+id/detail_resolution"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_tag_container"
+            app:detailText="@{wall}"
+            tools:text="Resolution: 1920x1080" />
+
+        <TextView
+            style="@style/details_text"
+            android:id="@+id/detail_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_resolution"
+            app:detailText="@{wall}"
+            tools:text="Size: 1MiB" />
+
+        <TextView
+            android:id="@+id/detail_category"
+            style="@style/details_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_tag_container"
+            app:detailText="@{wall}"
+            tools:text="Category: GENERAL" />
+
+        <TextView
+            android:id="@+id/detail_purity"
+            style="@style/details_text"
+            android:layout_marginStart="0dp"
+            app:layout_constraintStart_toStartOf="@id/detail_category"
+            app:layout_constraintTop_toBottomOf="@id/detail_category"
+            app:detailText="@{wall}"
+            tools:text="Purity: SFW" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintTop_toBottomOf="@id/detail_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+            <com.mikepenz.iconics.view.IconicsImageButton
+                android:id="@+id/browser_btn"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                app:iiv_color="@color/material_drawer_primary_text"
+                app:iiv_icon="esp-internet"
+                app:iiv_size="@dimen/iicon_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/favorite_btn"
+                tools:src="@android:drawable/ic_menu_info_details"
+                />
+            <com.mikepenz.iconics.view.IconicsImageButton
+                android:id="@+id/favorite_btn"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginStart="20dp"
+                app:iiv_color="@color/material_drawer_primary_text"
+                app:iiv_icon="esp-like-2"
+                app:iiv_size="@dimen/iicon_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/browser_btn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/set_wallpaper_btn"
+                tools:src="@android:drawable/ic_menu_info_details"
+                />
+            <com.mikepenz.iconics.view.IconicsImageButton
+                android:id="@+id/set_wallpaper_btn"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginStart="20dp"
+                app:iiv_color="@color/material_drawer_primary_text"
+                app:iiv_icon="esp-picture-1"
+                app:iiv_size="@dimen/iicon_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/favorite_btn"
+                app:layout_constraintEnd_toStartOf="@id/download_btn"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@android:drawable/ic_menu_info_details"
+                />
+
+            <com.mikepenz.iconics.view.IconicsImageButton
+                android:id="@+id/download_btn"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginStart="20dp"
+                app:iiv_color="@color/material_drawer_primary_text"
+                app:iiv_icon="esp-download"
+                app:iiv_size="@dimen/iicon_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/set_wallpaper_btn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@android:drawable/ic_menu_info_details"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

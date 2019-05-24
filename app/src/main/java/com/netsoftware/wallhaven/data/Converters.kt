@@ -4,18 +4,19 @@ import androidx.room.TypeConverter
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import com.netsoftware.wallhaven.WallhavenApp
+import com.netsoftware.wallhaven.data.models.Tag
 import java.lang.reflect.Type
 import java.util.*
 
 
 class Converters {
     @TypeConverter
-    fun restoreList(listOfString: String): List<String> {
+    fun restoreStringList(listOfString: String): List<String> {
         return Gson().fromJson(listOfString, object : TypeToken<List<String>>() {}.type)
     }
 
     @TypeConverter
-    fun saveList(listOfString: List<String>): String {
+    fun saveStringList(listOfString: List<String>): String {
         return Gson().toJson(listOfString)
     }
 
@@ -39,6 +40,16 @@ class Converters {
     @TypeConverter
     fun fromDate(date: Date?): Long? {
         return date?.time
+    }
+
+    @TypeConverter
+    fun restoreTagList(listOfTag: String): List<Tag> {
+        return Gson().fromJson(listOfTag, object : TypeToken<List<Tag>>() {}.type)
+    }
+
+    @TypeConverter
+    fun saveTagList(listOfTag: List<Tag>): String {
+        return Gson().toJson(listOfTag)
     }
 }
 

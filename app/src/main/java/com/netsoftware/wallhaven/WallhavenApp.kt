@@ -1,7 +1,5 @@
 package com.netsoftware.wallhaven
 
-import android.util.Log
-import com.amitshekhar.DebugDB
 import com.mikepenz.essentialpack_typeface_library.EssentialPack
 import com.mikepenz.essentialpackfilled_typeface_library.EssentialPackFilled
 import com.mikepenz.iconics.Iconics
@@ -22,7 +20,6 @@ class WallhavenApp : DaggerApplication(){
         super.onCreate()
         checkScreenDimension()
         initIconFonts()
-        if(BuildConfig.DEBUG) Log.w("DEBUG-DB", DebugDB.getAddressLog())
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

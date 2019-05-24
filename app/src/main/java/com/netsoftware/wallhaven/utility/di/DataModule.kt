@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.netsoftware.wallhaven.data.MyDeserializer
 import com.netsoftware.wallhaven.data.WallhavenDB
+import com.netsoftware.wallhaven.data.dataSources.local.TagDao
 import com.netsoftware.wallhaven.data.dataSources.local.UserDao
 import com.netsoftware.wallhaven.data.dataSources.local.WallpaperDao
 import com.netsoftware.wallhaven.data.dataSources.remote.WallhavenApi
@@ -45,6 +46,12 @@ class DataModule{
     @Provides
     fun providesWallpaperDao(database: WallhavenDB): WallpaperDao {
         return database.wallpaperDao()
+    }
+
+    @Singleton
+    @Provides
+    fun providesTagDao(database: WallhavenDB): TagDao {
+        return database.tagDao()
     }
 
     @Provides

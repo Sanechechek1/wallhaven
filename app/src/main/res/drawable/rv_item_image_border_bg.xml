@@ -2,5 +2,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <corners android:radius="@dimen/viewer_item_corner_radius" />
-    <stroke android:color="@color/image_border" android:width="3dp"/>
+    <stroke android:color="@color/image_border" android:width="2dp"/>
 </shape>

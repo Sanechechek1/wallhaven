@@ -37,6 +37,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation "androidx.recyclerview:recyclerview:1.1.0-alpha04"
     implementation "androidx.annotation:annotation:1.0.2"
     implementation "com.google.android.material:material:1.1.0-alpha05"
@@ -65,7 +66,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
-
     //rxAndroid
     implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
 
@@ -94,7 +94,6 @@ dependencies {
     implementation 'com.mikepenz:material-design-iconic-typeface:2.2.0.5@aar'
 
     //MaterialDrawer
-//    implementation "com.mikepenz:materialdrawer:6.1.2"
     implementation 'co.zsmb:materialdrawer-kt:2.0.1'
 
     //MyIconFonts
@@ -110,8 +109,14 @@ dependencies {
     implementation 'eu.davidea:flexible-adapter-ui:1.0.0'
 
     //Scrapper
-    implementation 'in.nerd-is:wallhaven4kotlin:0.1.1'
+    implementation 'in.nerd-is:wallhaven4kotlin:0caa6f0fed1e7d625ebf17dc12e3d363af269694'
 
     //ProgressBar
     implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
+
+    //ImageViewer
+    implementation 'com.github.AScri:StfalconImageViewer:0.1.1'
+
+    //PullToRefresh
+    implementation 'com.dinuscxj:recyclerrefreshlayout:2.0.5'
 }
