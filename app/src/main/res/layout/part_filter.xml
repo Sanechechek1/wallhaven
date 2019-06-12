@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:background="@color/primary"
+        >
+
+        <TextView
+            android:id="@+id/category_title"
+            style="@style/filter_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <lib.kingja.switchbutton.SwitchMultiButton
+            android:id="@+id/category_switch"
+            style="@style/filter_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/category_title"
+            app:switchTabs="@array/categories" />
+
+        <TextView
+            android:id="@+id/purity_title"
+            style="@style/filter_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Purity"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/category_switch" />
+
+        <lib.kingja.switchbutton.SwitchMultiButton
+            android:id="@+id/purity_switch"
+            style="@style/filter_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/purity_title"
+            app:switchTabs="@array/purity" />
+
+        <TextView
+            android:id="@+id/resolution_title"
+            style="@style/filter_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Resolution"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/purity_switch" />
+
+        <lib.kingja.switchbutton.SwitchMultiButton
+            android:id="@+id/resolution_switch"
+            style="@style/filter_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            app:allowMultiTab="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/resolution_title"
+            app:switchTabs="@array/resolution_type" />
+
+        <TextView
+            android:id="@+id/resolution_value"
+            style="@style/filter_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/outlined_background"
+            android:text="@string/select"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/resolution_switch"
+            app:layout_constraintTop_toBottomOf="@id/resolution_title" />
+
+        <TextView
+            android:id="@+id/ratio_title"
+            style="@style/filter_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ratio"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/resolution_switch" />
+
+        <TextView
+            android:id="@+id/ratio_value"
+            style="@style/filter_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/outlined_background"
+            android:text="@string/select"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ratio_title" />
+
+        <TextView
+            android:id="@+id/color_title"
+            style="@style/filter_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ratio_value" />
+
+        <TextView
+            android:id="@+id/color_value"
+            style="@style/filter_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/outlined_background"
+            android:text="@string/select"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/color_title" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,5 +1,6 @@
 package com.netsoftware.wallhaven.ui.main
 
+import android.app.Dialog
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -19,7 +20,6 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.netsoftware.wallhaven.R
-import com.netsoftware.wallhaven.WallhavenApp
 import com.netsoftware.wallhaven.WallhavenApp.Companion.TAG
 import com.netsoftware.wallhaven.data.dataSources.local.SharedPrefs
 import com.netsoftware.wallhaven.data.models.SearchConfig
@@ -27,7 +27,7 @@ import com.netsoftware.wallhaven.data.models.Wallpaper
 import com.netsoftware.wallhaven.databinding.ViewerFragmentBinding
 import com.netsoftware.wallhaven.ui.adapters.ProgressItem
 import com.netsoftware.wallhaven.ui.adapters.WallpaperItem
-import com.netsoftware.wallhaven.ui.main.ViewerViewModel.ViewerType.*
+import com.netsoftware.wallhaven.ui.main.ViewerViewModel.ViewerType.SUITABLE_TYPE
 import com.netsoftware.wallhaven.ui.views.ImageViewerOverlay
 import com.netsoftware.wallhaven.utility.extensions.GlideApp
 import com.stfalcon.imageviewer.StfalconImageViewer
@@ -48,6 +48,7 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
     private val adapter = FlexibleAdapter<IFlexible<*>>(mutableListOf(), this, true)
     private val viewerType = arguments?.let { ViewerFragmentArgs.fromBundle(it).viewerType } ?: SUITABLE_TYPE
     private var currentImage = -1
+    private var searchConfig = SearchConfig()
 
     private lateinit var imageViewer: StfalconImageViewer<Wallpaper>
 
@@ -55,30 +56,12 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        //TODO: search will change searchConfig in viewModel and invoke refresh()
-        val searchQuery = arguments?.let { ViewerFragmentArgs.fromBundle(it).searchQuery } ?: ""
+        searchConfig = SearchConfig.configFromBundle(arguments)
         binding = DataBindingUtil.inflate(inflater, R.layout.viewer_fragment, container, false)
         binding.viewModel = ViewModelProviders.of(this, viewModelFactory).get(ViewerViewModel::class.java)
         binding.lifecycleOwner = viewLifecycleOwner
-
-        binding.viewModel?.init(viewerType,
-            SearchConfig(q = searchQuery,
-                resolution_at_least = WallhavenApp.appComponent.getSharedPrefs().screenResolution,
-                ratios = WallhavenApp.appComponent.getSharedPrefs().screenRatio
-            ))
-
-        binding.toolbarTitle.text = getString(viewerType.titleId).format(searchQuery)
-        binding.toolbarMenuIcon.setOnClickListener { (activity as MainActivity).openDrawer() }
-        binding.refreshLayout.setColorSchemeResources(
-            R.color.material_drawer_background, R.color.lime, R.color.orange, R.color.blue
-        )
-        binding.refreshLayout.setOnRefreshListener(this)
-        binding.refreshLayout.setProgressBackgroundColorSchemeColor(
-            resources.getColor(R.color.colorPrimary, context?.theme)
-        )
-        binding.refreshLayout.isRefreshing = true
-
-        initRecyclerView()
+        binding.viewModel?.init(viewerType, searchConfig)
+        setupViews()
 
         binding.viewModel?.getPage()?.observe(
             viewLifecycleOwner,
@@ -91,7 +74,17 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
         return binding.root
     }
 
-    private fun initRecyclerView() {
+    private fun setupViews() {
+        binding.toolbarTitle.text = getString(viewerType.titleId).format(searchConfig.q)
+        binding.toolbarMenuIcon.setOnClickListener { (activity as MainActivity).openDrawer() }
+        binding.refreshLayout.setColorSchemeResources(
+            R.color.material_drawer_background, R.color.lime, R.color.orange, R.color.blue
+        )
+        binding.refreshLayout.setOnRefreshListener(this)
+        binding.refreshLayout.setProgressBackgroundColorSchemeColor(
+            resources.getColor(R.color.colorPrimary, context?.theme)
+        )
+        binding.refreshLayout.isRefreshing = true
         adapter.setEndlessScrollListener(this, ProgressItem())
             .setEndlessScrollThreshold(8)
             .endlessPageSize = 24
@@ -105,6 +98,8 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
                 .withOffset(3)
                 .withEdge(true)
         )
+
+        binding.filterContent.resolutionValue.setOnClickListener {showResolutionPicker()}
     }
 
     override fun noMoreLoad(newItemsSize: Int) {
@@ -114,14 +109,7 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
     }
 
     override fun onLoadMore(lastPosition: Int, currentPage: Int) {
-        when (viewerType) {
-            SUITABLE_TYPE -> binding.viewModel?.loadSuitable(currentPage + 1)
-            LATEST_TYPE -> binding.viewModel?.loadLatest(currentPage + 1)
-            TOPLIST_TYPE -> binding.viewModel?.loadToplist(currentPage + 1)
-            RANDOM_TYPE -> binding.viewModel?.loadRandom(currentPage + 1)
-            SEARCH_TYPE -> binding.viewModel?.loadSearch(currentPage + 1)
-            FAVORITES_TYPE -> TODO()
-        }
+        binding.viewModel?.loadByType(currentPage + 1)
         Log.d(TAG, "onLoadMore: lastPosition=$lastPosition")
         Log.d(TAG, "onLoadMore: currentPage=$currentPage")
         Log.d(TAG, "onLoadMore: Total pages loaded=${adapter.endlessCurrentPage}")
@@ -134,6 +122,7 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
         val overlay = ImageViewerOverlay(context, currentWall, View.OnClickListener {
             imageViewer.updateTransitionImage(null)
             imageViewer.dismiss()
+            //TODO: change to search configuring instead navigate to another fragment
             (activity as MainActivity).navigateToSearch(it.tag.toString())
         }, loadingLiveData, viewLifecycleOwner)
         imageViewer = StfalconImageViewer.Builder<Wallpaper>(
@@ -190,6 +179,13 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
                     .into(container)
             }
         }
+    }
+
+    private fun showResolutionPicker(){
+        val dialog = Dialog(context)
+        dialog.setContentView(R.layout.picker_resolution)
+        dialog.window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.show()
     }
 
     override fun onRefresh() {

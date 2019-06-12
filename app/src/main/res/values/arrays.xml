@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="categories">
+        <item>@string/title_category_general</item>
+        <item>@string/title_category_anime</item>
+        <item>@string/title_category_people</item>
+    </array>
+
+    <array name="purity">
+        <item>@string/title_purity_sfw</item>
+        <item>@string/title_purity_sketchy</item>
+    </array>
+
+    <array name="resolution_type">
+        <item>@string/title_resolution_at_least</item>
+        <item>@string/title_resolution_exactly</item>
+    </array>
+</resources>

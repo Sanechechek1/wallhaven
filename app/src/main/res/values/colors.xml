@@ -12,6 +12,12 @@
     <color name="lime">#CDDC39</color>
     <color name="orange">#ffab00</color>
 
+    <!--Text-->
+    <color name="primary_text">#1a1a1a</color>
+    <color name="secondary_text">#2E2E2E</color>
+    <color name="primary_light_text">#DEFFFFFF</color>
+    <color name="secondary_light_text">#8AFFFFFF</color>
+
     <!-- OVERWRITE THESE COLORS FOR THEME -->
     <!-- MaterialDrawer DEFAULT colors -->
     <color name="material_drawer_background">#1a1a1a</color>

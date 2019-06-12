@@ -11,6 +11,7 @@ import com.netsoftware.wallhaven.data.repositories.UserRepository
 import com.netsoftware.wallhaven.data.repositories.WallpaperRepository
 import com.netsoftware.wallhaven.utility.extensions.BaseViewModel
 import com.netsoftware.wallhaven.utility.extensions.addTo
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -29,20 +30,19 @@ class ViewerViewModel @Inject constructor(
     fun getPage(): LiveData<List<Wallpaper>> = page
     fun isLoading(): LiveData<Boolean> = isLoading
 
-    fun init(type: ViewerType, searchConfig: SearchConfig = SearchConfig()){
+    fun init(type: ViewerType, searchConfig: SearchConfig = SearchConfig()) {
         this.type = type
         this.searchConfig = searchConfig
         if (walls.isEmpty()) {
-            loadByType(type)
+            loadByType()
         } else page.value = walls
     }
 
-    private fun loadByType(type: ViewerType) {
+    fun loadByType(page: Int = 1) {
         when (type) {
-            //TODO: Think how need to sort suitable
-            ViewerType.LATEST_TYPE, ViewerType.SUITABLE_TYPE -> loadLatest()
-            ViewerType.TOPLIST_TYPE -> loadToplist()
-            ViewerType.RANDOM_TYPE -> loadRandom()
+            ViewerType.LATEST_TYPE, ViewerType.SUITABLE_TYPE -> loadLatest(page)
+            ViewerType.TOPLIST_TYPE -> loadToplist(page)
+            ViewerType.RANDOM_TYPE -> loadRandom(page)
             ViewerType.FAVORITES_TYPE -> TODO()
         }
     }
@@ -50,17 +50,18 @@ class ViewerViewModel @Inject constructor(
     fun refresh() {
         walls.clear()
         page.value = listOf()
-        loadByType(type)
+        loadByType()
     }
 
-    fun loadLatest(page: Int = 1) {
+    fun search(searchConfig: SearchConfig) {
+        this.searchConfig = searchConfig
+        refresh()
+    }
+
+    private fun loadLatest(page: Int = 1) {
         isLoading.value = true
         wallpaperRepository.getLatest(searchConfig.copy(page = page.toString()))
-                //TODO: extract duplicated configuration
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doFinally { isLoading.value = false }
-            .retry(2)
+            .config()
             .subscribe({
                 walls.addAll(it)
                 this.page.value = it
@@ -71,13 +72,10 @@ class ViewerViewModel @Inject constructor(
             .addTo(compositeDisposable)
     }
 
-    fun loadToplist(page: Int = 1) {
+    private fun loadToplist(page: Int = 1) {
         isLoading.value = true
         wallpaperRepository.getTopList(searchConfig.copy(page = page.toString()))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doFinally { isLoading.value = false }
-            .retry(2)
+            .config()
             .subscribe({
                 walls.addAll(it)
                 this.page.value = it
@@ -88,13 +86,10 @@ class ViewerViewModel @Inject constructor(
             .addTo(compositeDisposable)
     }
 
-    fun loadRandom(page: Int = 1) {
+    private fun loadRandom(page: Int = 1) {
         isLoading.value = true
         wallpaperRepository.getRandom(searchConfig.copy(page = page.toString()))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doFinally { isLoading.value = false }
-            .retry(2)
+            .config()
             .subscribe({
                 walls.addAll(it)
                 this.page.value = it
@@ -120,6 +115,13 @@ class ViewerViewModel @Inject constructor(
                 })
                 .addTo(compositeDisposable)
         }
+    }
+
+    private fun Single<List<Wallpaper>>.config(): Single<List<Wallpaper>> {
+        return this.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doFinally { isLoading.value = false }
+            .retry(2)
     }
 
     enum class ViewerType(val titleId: Int) {

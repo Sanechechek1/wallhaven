@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/material_drawer_background"
+    android:scrollbars="none">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/picker_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/primary"
+            android:elevation="2dp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Select resolution"
+            android:textColor="@color/primary_text"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/resolution_input_title"
+            style="@style/filter_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Custom Resolution"
+            android:textColor="@color/primary_light_text"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/picker_title" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/width_input"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            app:boxBackgroundColor="@color/material_drawer_background"
+            app:layout_constraintEnd_toStartOf="@+id/custom_resolution_delimiter"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/resolution_input_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:hint="Width"
+                android:textSize="18sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/custom_resolution_delimiter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="x"
+            android:textColor="@color/primary_light_text"
+            android:textSize="18sp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+
+            app:layout_constraintBottom_toBottomOf="@id/width_input"
+            app:layout_constraintEnd_toStartOf="@+id/height_input"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/width_input"
+            app:layout_constraintTop_toBottomOf="@id/resolution_input_title" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/height_input"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="90dp"
+
+            app:boxBackgroundColor="@color/material_drawer_background"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/custom_resolution_delimiter"
+            app:layout_constraintTop_toBottomOf="@id/resolution_input_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:hint="Height"
+                android:textSize="18sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--<com.google.android.material.chip.ChipGroup-->
+        <!--android:id="@+id/resolution_16x9_chipgroup"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:paddingStart="8dp"-->
+        <!--android:paddingEnd="8dp"-->
+        <!--app:chipClick="@{chipClick}"-->
+        <!--app:chipSpacingHorizontal="8dp"-->
+        <!--app:chipSpacingVertical="4dp"-->
+        <!--app:chips="@{wall.tags}"-->
+        <!--app:singleLine="true"-->
+        <!--app:singleSelection="true" />-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

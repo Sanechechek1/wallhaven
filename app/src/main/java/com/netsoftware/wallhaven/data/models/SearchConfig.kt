@@ -1,5 +1,10 @@
 package com.netsoftware.wallhaven.data.models
 
+import android.os.Bundle
+import com.netsoftware.wallhaven.WallhavenApp
+import com.netsoftware.wallhaven.ui.main.ViewerFragmentArgs
+import com.netsoftware.wallhaven.ui.main.ViewerViewModel.ViewerType.SUITABLE_TYPE
+
 data class SearchConfig(
     var q: String = "",
     var categories: String = getCategoriesCode(general = true, anime = false, people = false),
@@ -12,8 +17,8 @@ data class SearchConfig(
     var ratios: String = "",
     var colors: String = "",
     var page: String = 1.toString()
-){
-    companion object{
+) {
+    companion object {
         /**
          * Params for [Q]:
          * tagname - search fuzzily for a tag/keyword
@@ -61,6 +66,19 @@ data class SearchConfig(
             if (sketchy) result.setCharAt(1, '1')
             if (nsfw) result.setCharAt(2, '1')
             return result.toString()
+        }
+
+        fun configFromBundle(bundle: Bundle?): SearchConfig {
+            val searchConfig = SearchConfig()
+            val viewerType = bundle?.let { ViewerFragmentArgs.fromBundle(it).viewerType } ?: SUITABLE_TYPE
+            if (viewerType == SUITABLE_TYPE) {
+                searchConfig.apply {
+                    resolution_at_least = WallhavenApp.appComponent.getSharedPrefs().screenResolution
+                    ratios = WallhavenApp.appComponent.getSharedPrefs().screenRatio
+                }
+            }
+            searchConfig.q = bundle?.let { ViewerFragmentArgs.fromBundle(it).searchQuery } ?: ""
+            return searchConfig
         }
     }
 }

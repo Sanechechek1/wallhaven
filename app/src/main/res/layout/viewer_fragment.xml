@@ -17,94 +17,90 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary"
-                    android:elevation="2dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-                    <com.mikepenz.iconics.view.IconicsImageButton
-                        android:id="@+id/toolbar_menu_icon"
-                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                        android:layout_width="@dimen/icon_size"
-                        android:layout_height="@dimen/icon_size"
-                        android:layout_marginStart="5dp"
-                        app:iiv_color="@color/dark_icon_tint"
-                        app:iiv_icon="esp-menu-2"
-                        app:iiv_size="@dimen/iicon_size"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        />
+            <com.mikepenz.iconics.view.IconicsImageButton
+                android:id="@+id/toolbar_menu_icon"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginStart="5dp"
+                app:iiv_color="@color/dark_icon_tint"
+                app:iiv_icon="esp-menu-2"
+                app:iiv_size="@dimen/iicon_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/toolbar_title"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:ellipsize="end"
-                        android:lines="1"
-                        android:textColor="@color/dark_icon_tint"
-                        android:textSize="24sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/toolbar_filter_icon"
-                        app:layout_constraintStart_toEndOf="@id/toolbar_menu_icon"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Latest" />
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textColor="@color/primary_text"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/toolbar_filter_icon"
+                app:layout_constraintStart_toEndOf="@id/toolbar_menu_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Latest" />
 
-                    <com.mikepenz.iconics.view.IconicsImageButton
-                        android:id="@+id/toolbar_filter_icon"
-                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                        android:layout_width="@dimen/icon_size"
-                        android:layout_height="@dimen/icon_size"
-                        android:layout_gravity="end"
-                        android:layout_marginEnd="5dp"
-                        app:iiv_color="@color/dark_icon_tint"
-                        app:iiv_icon="esp-controls"
-                        app:iiv_size="@dimen/iicon_size"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.mikepenz.iconics.view.IconicsImageButton
+                android:id="@+id/toolbar_filter_icon"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_gravity="end"
+                android:layout_marginEnd="5dp"
+                app:iiv_color="@color/dark_icon_tint"
+                app:iiv_icon="esp-controls"
+                app:iiv_size="@dimen/iicon_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            >
-        <!--suppress AndroidDomInspection -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@color/material_drawer_background"
-            tools:itemCount="2"
-            tools:listitem="@layout/rv_item_viewer" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+            <!--suppress AndroidDomInspection -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/material_drawer_background"
+                tools:itemCount="2"
+                tools:listitem="@layout/rv_item_viewer" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <!--<me.zhanghai.android.materialprogressbar.MaterialProgressBar-->
-            <!--style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding"-->
-            <!--app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintEnd_toEndOf="parent"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/material_drawer_background"-->
-            <!--android:indeterminate="true"-->
-            <!--android:visibility="@{safeUnbox(viewModel.isLoading()) ? View.VISIBLE : View.GONE}"-->
-            <!--app:mpb_indeterminateTint="@color/colorPrimary"-->
-            <!--app:mpb_progressStyle="horizontal"-->
-            <!--app:mpb_useIntrinsicPadding="false" />-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/filter_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <include android:id="@+id/filter_content" layout="@layout/part_filter" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

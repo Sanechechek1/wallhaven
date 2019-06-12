@@ -119,4 +119,7 @@ dependencies {
 
     //PullToRefresh
     implementation 'com.dinuscxj:recyclerrefreshlayout:2.0.5'
+
+    //SwitchButton
+    implementation 'com.github.fstovarr:SwitchButton:-SNAPSHOT'
 }

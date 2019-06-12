@@ -138,7 +138,7 @@ class MainActivity : DaggerAppCompatActivity() {
     fun navigateToSearch(tagId: String) {
         navController.navigate(
             ViewerFragmentDirections.goViewer().apply {
-                viewerType = SEARCH_TYPE
+                viewerType = LATEST_TYPE
                 //TODO: create QueryHelper
                 searchQuery = "id:$tagId"
             })
