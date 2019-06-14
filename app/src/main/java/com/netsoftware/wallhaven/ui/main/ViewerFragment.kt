@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
@@ -24,12 +25,15 @@ import com.netsoftware.wallhaven.WallhavenApp.Companion.TAG
 import com.netsoftware.wallhaven.data.dataSources.local.SharedPrefs
 import com.netsoftware.wallhaven.data.models.SearchConfig
 import com.netsoftware.wallhaven.data.models.Wallpaper
+import com.netsoftware.wallhaven.databinding.PickerResolutionBinding
 import com.netsoftware.wallhaven.databinding.ViewerFragmentBinding
 import com.netsoftware.wallhaven.ui.adapters.ProgressItem
 import com.netsoftware.wallhaven.ui.adapters.WallpaperItem
 import com.netsoftware.wallhaven.ui.main.ViewerViewModel.ViewerType.SUITABLE_TYPE
 import com.netsoftware.wallhaven.ui.views.ImageViewerOverlay
 import com.netsoftware.wallhaven.utility.extensions.GlideApp
+import com.netsoftware.wallhaven.utility.extensions.dpToPx
+import com.netsoftware.wallhaven.utility.managers.MyDisplayManager
 import com.stfalcon.imageviewer.StfalconImageViewer
 import dagger.android.support.DaggerFragment
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -99,7 +103,7 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
                 .withEdge(true)
         )
 
-        binding.filterContent.resolutionValue.setOnClickListener {showResolutionPicker()}
+        binding.filterContent.resolutionValue.setOnClickListener { showResolutionPicker() }
     }
 
     override fun noMoreLoad(newItemsSize: Int) {
@@ -181,11 +185,27 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
         }
     }
 
-    private fun showResolutionPicker(){
-        val dialog = Dialog(context)
-        dialog.setContentView(R.layout.picker_resolution)
-        dialog.window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        dialog.show()
+    private fun showResolutionPicker() {
+        context?.let {
+            val dialog = Dialog(it)
+            val pickerBinding: PickerResolutionBinding =
+                DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.picker_resolution, null, false)
+            val checkedResolutions = mutableListOf<String>()
+            dialog.setContentView(pickerBinding.root)
+            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, MyDisplayManager.getCurentDisplaySize(it).y-50.dpToPx)
+            pickerBinding.resolutionsChipgroup.isSingleSelection = binding.filterContent.resolutionSwitch.getState(0)
+            pickerBinding.chipClick = CompoundButton.OnCheckedChangeListener{ view, isChecked ->
+                if (isChecked){
+                    checkedResolutions.add(view.text.toString())
+                }else{
+                    checkedResolutions.remove(view.text.toString())
+                }
+            }
+            dialog.setOnDismissListener {
+                Log.d(TAG, "showResolutionPicker: $checkedResolutions")
+            }
+            dialog.show()
+        }
     }
 
     override fun onRefresh() {

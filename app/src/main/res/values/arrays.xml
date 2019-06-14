@@ -6,13 +6,38 @@
         <item>@string/title_category_people</item>
     </array>
 
-    <array name="purity">
+    <array name="purities">
         <item>@string/title_purity_sfw</item>
         <item>@string/title_purity_sketchy</item>
     </array>
 
-    <array name="resolution_type">
+    <array name="resolution_types">
         <item>@string/title_resolution_at_least</item>
         <item>@string/title_resolution_exactly</item>
     </array>
+    <string-array name="resolution_values">
+        <item>3840x3072</item>
+        <item>3840x2880</item>
+        <item>3840x2400</item>
+        <item>3840x2160</item>
+        <item>3840х1600</item>
+        <item>3440х1440</item>
+        <item>2560x2048</item>
+        <item>2560x1920</item>
+        <item>2560x1600</item>
+        <item>2560x1440</item>
+        <item>2560х1080</item>
+        <item>1920x1536</item>
+        <item>1920x1440</item>
+        <item>1920x1200</item>
+        <item>1920х1080</item>
+        <item>1600x1280</item>
+        <item>1600x1200</item>
+        <item>1600x1000</item>
+        <item>1600х900</item>
+        <item>1280x1024</item>
+        <item>1280x960</item>
+        <item>1280x800</item>
+        <item>1280х720</item>
+    </string-array>
 </resources>

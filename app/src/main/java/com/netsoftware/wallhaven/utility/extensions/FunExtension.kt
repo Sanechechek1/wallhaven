@@ -2,6 +2,7 @@ package com.netsoftware.wallhaven.utility.extensions
 
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.navigation.NavArgument
 import com.netsoftware.wallhaven.data.models.THUMB_ORIGINAL
 import com.netsoftware.wallhaven.data.models.Tag
@@ -10,10 +11,15 @@ import com.netsoftware.wallhaven.utility.managers.MyDisplayManager
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
+
 val Int.pxToDp: Int
     get() = (this / Resources.getSystem().displayMetrics.density).toInt()
 val Int.dpToPx: Int
     get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+fun Int.spToPx(): Float {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this.toFloat(), Resources.getSystem().displayMetrics)
+}
 
 fun Disposable.addTo(compositeDisposable: CompositeDisposable): Disposable = apply { compositeDisposable.add(this) }
 

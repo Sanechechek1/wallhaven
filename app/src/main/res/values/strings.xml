@@ -24,4 +24,9 @@
     <string name="title_detail_category">Category: %1$s</string>
     <string name="title_detail_purity">Purity: %1$s</string>
     <string name="select">Select</string>
+    <string name="title_purity">Purity</string>
+    <string name="title_resolution">Resolution</string>
+    <string name="title_ratio">Ratio</string>
+    <string name="title_color">Color</string>
+    <string name="title_category">Category</string>
 </resources>

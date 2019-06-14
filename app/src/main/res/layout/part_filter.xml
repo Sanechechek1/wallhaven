@@ -14,7 +14,7 @@
             style="@style/filter_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Category"
+            android:text="@string/title_category"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,7 +32,7 @@
             style="@style/filter_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Purity"
+            android:text="@string/title_purity"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/category_switch" />
 
@@ -43,14 +43,14 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/purity_title"
-            app:switchTabs="@array/purity" />
+            app:switchTabs="@array/purities" />
 
         <TextView
             android:id="@+id/resolution_title"
             style="@style/filter_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Resolution"
+            android:text="@string/title_resolution"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/purity_switch" />
 
@@ -62,39 +62,37 @@
             app:allowMultiTab="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/resolution_title"
-            app:switchTabs="@array/resolution_type" />
+            app:switchTabs="@array/resolution_types" />
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/resolution_value"
             style="@style/filter_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/outlined_background"
             android:text="@string/select"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@id/resolution_switch"
-            app:layout_constraintTop_toBottomOf="@id/resolution_title" />
+            app:layout_constraintTop_toTopOf="@id/resolution_switch"
+            app:layout_constraintBottom_toBottomOf="@id/resolution_switch"
+            />
 
         <TextView
             android:id="@+id/ratio_title"
             style="@style/filter_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ratio"
+            android:text="@string/title_ratio"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/resolution_switch" />
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/ratio_value"
             style="@style/filter_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/outlined_background"
             android:text="@string/select"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
@@ -105,18 +103,17 @@
             style="@style/filter_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Color"
+            android:text="@string/title_color"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ratio_value" />
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/color_value"
             style="@style/filter_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/outlined_background"
+            android:layout_marginTop="8dp"
             android:text="@string/select"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

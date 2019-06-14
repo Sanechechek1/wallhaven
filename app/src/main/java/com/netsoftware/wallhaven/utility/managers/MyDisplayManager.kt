@@ -37,4 +37,12 @@ object MyDisplayManager {
     fun getResolution(width: Int, height: Int): String {
         return "$width$resolutionDelimiter$height"
     }
+
+    fun getCurentDisplaySize(context: Context): Point {
+        return Point().also {
+            (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+                .defaultDisplay
+                .apply { getSize(it) }
+        }
+    }
 }

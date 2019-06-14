@@ -1,6 +1,7 @@
 package com.netsoftware.wallhaven.ui.bindings
 
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -11,6 +12,7 @@ import com.netsoftware.wallhaven.data.dataSources.local.SharedPrefs
 import com.netsoftware.wallhaven.data.models.Tag
 import com.netsoftware.wallhaven.data.models.Wallpaper
 import com.netsoftware.wallhaven.utility.extensions.GlideApp
+import com.netsoftware.wallhaven.utility.extensions.dpToPx
 
 object CustomBindings {
     @JvmStatic
@@ -59,6 +61,28 @@ object CustomBindings {
             chip.tag = tag.id
             chip.isClickable = true
             chip.setOnClickListener(onClickListener)
+            chipGroup.addView(chip)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("chips", "chipClick")
+    fun bindStringChips(
+        chipGroup: ChipGroup,
+        resolutions: Array<String>,
+        onCheckedChangeListener: CompoundButton.OnCheckedChangeListener
+    ) {
+        for (resolution in resolutions) {
+            val chip = Chip(chipGroup.context)
+            chip.text = resolution
+            chip.textStartPadding = 8.dpToPx.toFloat()
+            chip.textEndPadding = 8.dpToPx.toFloat()
+            chip.isCheckedIconVisible = false
+            chip.chipBackgroundColor = chipGroup.context.getColorStateList(R.color.chip_background)
+            chip.rippleColor = chipGroup.context.getColorStateList(R.color.chip_background)
+            chip.isClickable = true
+            chip.isCheckable = true
+            chip.setOnCheckedChangeListener(onCheckedChangeListener)
             chipGroup.addView(chip)
         }
     }
