@@ -8,13 +8,19 @@
         <variable
             name="chipClick"
             type="android.widget.CompoundButton.OnCheckedChangeListener" />
+
+        <variable
+            name="chipsSingleSelection"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/picker_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/material_drawer_background"
-        >
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <TextView
             android:id="@+id/picker_title"
@@ -24,7 +30,7 @@
             android:elevation="2dp"
             android:gravity="center"
             android:padding="16dp"
-            android:text="Select resolution"
+            android:text="@string/title_select_resolution"
             android:textColor="@color/primary_text"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -35,24 +41,24 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scrollbars="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/buttons_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/picker_title">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                >
+
                 <TextView
                     android:id="@+id/resolution_input_title"
-                    style="@style/filter_title"
+                    style="@style/PickerTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Custom Resolution"
-                    android:textColor="@color/primary_light_text"
-                    android:textSize="18sp"
+                    android:text="@string/title_custom_resolution"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/width_input"
@@ -70,7 +76,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:hint="Width"
+                        android:hint="@string/title_width"
+                        android:inputType="numberSigned"
+                        android:singleLine="true"
+                        android:imeOptions="actionNext"
+                        android:maxLength="4"
+                        android:nextFocusRight="@id/height_input"
                         android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -80,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
-                    android:text="x"
+                    android:text="@string/delimiter"
                     android:textColor="@color/primary_light_text"
                     android:textSize="18sp"
 
@@ -108,28 +119,149 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:hint="Height"
+                        android:hint="@string/title_height"
+                        android:inputType="numberSigned"
+                        android:singleLine="true"
+                        android:maxLength="4"
                         android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/resolutions_chipgroup"
+                <TextView
+                    android:id="@+id/res_my_title"
+                    style="@style/PickerTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="20dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    app:chipClick="@{chipClick}"
-                    app:chipSpacingHorizontal="8dp"
-                    app:chipSpacingVertical="4dp"
-                    app:chips="@{@stringArray/resolution_values}"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="@string/title_my_resolution"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/width_input" />
 
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/res_my_chip"
+                    style="@style/PickerChipgroup"
+                    android:layout_marginStart="20dp"
+                    app:chipClick="@{chipClick}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/res_my_title" />
+
+                <TextView
+                    android:id="@+id/res_ultrawide_title"
+                    style="@style/PickerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_ultrawide"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/res_my_chip" />
+
+                <HorizontalScrollView
+                    android:id="@+id/res_ultrawide_scroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/res_ultrawide_title">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/res_ultrawide_chipgroup"
+                        style="@style/PickerChipgroup"
+                        app:chipClick="@{chipClick}"
+                        app:chips="@{@stringArray/resolution_ultrawide_values}"
+                        app:darkBackground="@{true}"
+                        app:singleSelection="@{safeUnbox(chipsSingleSelection)}" />
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/res_16x9_title"
+                    style="@style/PickerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_16x9"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/res_ultrawide_scroll" />
+
+                <HorizontalScrollView
+                    android:id="@+id/res_16x9_scroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/res_16x9_title">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/res_16x9_chipgroup"
+                        style="@style/PickerChipgroup"
+                        app:chipClick="@{chipClick}"
+                        app:chips="@{@stringArray/resolution_16x9_values}"
+                        app:darkBackground="@{true}"
+                        app:singleSelection="@{safeUnbox(chipsSingleSelection)}" />
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/res_16x10_title"
+                    style="@style/PickerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_16x10"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/res_16x9_scroll" />
+
+                <HorizontalScrollView
+                    android:id="@+id/res_16x10_scroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:scrollbars="none"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/res_16x10_title">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/res_16x10_chipgroup"
+                        style="@style/PickerChipgroup"
+                        app:chipClick="@{chipClick}"
+                        app:chips="@{@stringArray/resolution_16x10_values}"
+                        app:darkBackground="@{true}"
+                        app:singleSelection="@{safeUnbox(chipsSingleSelection)}" />
+                </HorizontalScrollView>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttons_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/top_stroke_bg"
+            android:elevation="5dp"
+            android:padding="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/accept_button"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/accept"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancel_button"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/accept_button"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -2,7 +2,7 @@ package com.netsoftware.wallhaven.data.dataSources.remote
 
 import `in`.nerd_is.wallhaven4kotlin.scrape.Scrape
 import com.netsoftware.wallhaven.data.models.SearchConfig
-import com.netsoftware.wallhaven.data.models.THUMB_ORIGINAL
+import com.netsoftware.wallhaven.data.models.User.Companion.THUMB_ORIGINAL
 import com.netsoftware.wallhaven.data.models.Wallpaper
 import com.netsoftware.wallhaven.utility.extensions.UrlHandler
 import com.netsoftware.wallhaven.utility.extensions.convert

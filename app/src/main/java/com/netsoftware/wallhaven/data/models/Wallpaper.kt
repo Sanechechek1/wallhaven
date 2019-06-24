@@ -4,6 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.netsoftware.wallhaven.data.models.User.Companion.CATEGORY_GENERAL
+import com.netsoftware.wallhaven.data.models.User.Companion.PURITY_SFW
 import com.netsoftware.wallhaven.utility.managers.MyDisplayManager
 import java.util.*
 

@@ -1,18 +1,20 @@
 package com.netsoftware.wallhaven.ui.bindings
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.chip.ChipGroup
 import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.data.dataSources.local.SharedPrefs
 import com.netsoftware.wallhaven.data.models.Tag
 import com.netsoftware.wallhaven.data.models.Wallpaper
 import com.netsoftware.wallhaven.utility.extensions.GlideApp
-import com.netsoftware.wallhaven.utility.extensions.dpToPx
 
 object CustomBindings {
     @JvmStatic
@@ -66,24 +68,58 @@ object CustomBindings {
     }
 
     @JvmStatic
-    @BindingAdapter("chips", "chipClick")
+    @BindingAdapter("chips", "darkBackground", "chipClick", requireAll = false)
     fun bindStringChips(
         chipGroup: ChipGroup,
-        resolutions: Array<String>,
-        onCheckedChangeListener: CompoundButton.OnCheckedChangeListener
+        chips: Array<String>,
+        darkBackground: Boolean,
+        onCheckedChangeListener: CompoundButton.OnCheckedChangeListener?
     ) {
-        for (resolution in resolutions) {
+        val itsColors = chips[0][0] == '#'
+        for (chipText in chips) {
             val chip = Chip(chipGroup.context)
-            chip.text = resolution
-            chip.textStartPadding = 8.dpToPx.toFloat()
-            chip.textEndPadding = 8.dpToPx.toFloat()
-            chip.isCheckedIconVisible = false
-            chip.chipBackgroundColor = chipGroup.context.getColorStateList(R.color.chip_background)
-            chip.rippleColor = chipGroup.context.getColorStateList(R.color.chip_background)
-            chip.isClickable = true
-            chip.isCheckable = true
+            chip.setChipDrawable(
+                ChipDrawable.createFromAttributes(
+                    chipGroup.context, null, 0,
+                    if (darkBackground) R.style.Base_Base_Widget_MaterialComponents_Chip_MyChip_Dark
+                    else R.style.Base_Base_Widget_MaterialComponents_Chip_MyChip_Light
+                )
+            )
+            if (itsColors) {
+                chip.chipBackgroundColor = ColorStateList(
+                    arrayOf(
+                        intArrayOf(android.R.attr.state_enabled)
+                    ),
+                    intArrayOf(Color.parseColor(chipText))
+                )
+                chip.isCheckedIconVisible = true
+                chip.chipStartPadding = chip.chipMinHeight / 2
+                chip.chipEndPadding = chip.chipMinHeight / 2
+                chip.textEndPadding = 0F
+                chip.textStartPadding = 0F
+                chip.closeIconEndPadding = 0F
+                chip.closeIconStartPadding = 0F
+                chip.iconStartPadding = 0F
+                chip.iconEndPadding = 0F
+            } else chip.text = chipText
             chip.setOnCheckedChangeListener(onCheckedChangeListener)
             chipGroup.addView(chip)
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("chipClick", requireAll = false)
+    fun bindChip(
+        chip: Chip,
+        onCheckedChangeListener: CompoundButton.OnCheckedChangeListener?
+    ) {
+        chip.setChipDrawable(
+            ChipDrawable.createFromAttributes(
+                chip.context, null, 0,
+                R.style.Base_Base_Widget_MaterialComponents_Chip_MyChip_Dark
+            )
+        )
+        chip.text = SharedPrefs.getSharedPrefs().screenResolution
+        chip.setOnCheckedChangeListener(onCheckedChangeListener)
     }
 }

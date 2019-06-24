@@ -1,5 +1,8 @@
 package com.netsoftware.wallhaven
 
+import android.content.Context
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.mikepenz.essentialpack_typeface_library.EssentialPack
 import com.mikepenz.essentialpackfilled_typeface_library.EssentialPackFilled
 import com.mikepenz.iconics.Iconics
@@ -56,5 +59,10 @@ class WallhavenApp : DaggerApplication(){
     companion object {
         lateinit var appComponent: AppComponent
         const val TAG = "WallhavenApp"
+
+        fun hideKeyboard(view: View){
+            val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 }

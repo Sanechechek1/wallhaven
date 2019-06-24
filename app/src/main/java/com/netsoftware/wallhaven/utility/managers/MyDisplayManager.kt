@@ -3,10 +3,11 @@ package com.netsoftware.wallhaven.utility.managers
 import android.content.Context
 import android.graphics.Point
 import android.view.WindowManager
+import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.WallhavenApp
 
 object MyDisplayManager {
-    const val resolutionDelimiter = "x"
+    val resolutionDelimiter: String = WallhavenApp.appComponent.getAppContext().getString(R.string.delimiter)
     private val displaySize: Point by lazy {
         Point().also {
             (WallhavenApp.appComponent.getAppContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
@@ -38,7 +39,7 @@ object MyDisplayManager {
         return "$width$resolutionDelimiter$height"
     }
 
-    fun getCurentDisplaySize(context: Context): Point {
+    fun getCurrentDisplaySize(context: Context): Point {
         return Point().also {
             (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
                 .defaultDisplay

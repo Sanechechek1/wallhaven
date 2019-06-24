@@ -71,7 +71,7 @@
         </HorizontalScrollView>
 
         <TextView
-            style="@style/details_text"
+            style="@style/DetailsText"
             android:id="@+id/detail_resolution"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/detail_tag_container"
@@ -79,7 +79,7 @@
             tools:text="Resolution: 1920x1080" />
 
         <TextView
-            style="@style/details_text"
+            style="@style/DetailsText"
             android:id="@+id/detail_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/detail_resolution"
@@ -88,7 +88,7 @@
 
         <TextView
             android:id="@+id/detail_category"
-            style="@style/details_text"
+            style="@style/DetailsText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/detail_tag_container"
             app:detailText="@{wall}"
@@ -96,7 +96,7 @@
 
         <TextView
             android:id="@+id/detail_purity"
-            style="@style/details_text"
+            style="@style/DetailsText"
             android:layout_marginStart="0dp"
             app:layout_constraintStart_toStartOf="@id/detail_category"
             app:layout_constraintTop_toBottomOf="@id/detail_category"

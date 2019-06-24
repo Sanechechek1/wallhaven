@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Wallhaven</string>
+    <string name="accept">Accept</string>
+    <string name="cancel">Cancel</string>
     <string name="title_search">Search: %1$s</string>
     <string name="title_suitable">Suitable</string>
     <string name="title_latest">Latest</string>
@@ -29,4 +31,14 @@
     <string name="title_ratio">Ratio</string>
     <string name="title_color">Color</string>
     <string name="title_category">Category</string>
+    <string name="title_select_resolution">Select resolution</string>
+    <string name="title_custom_resolution">Custom Resolution</string>
+    <string name="title_width">Width</string>
+    <string name="delimiter">x</string>
+    <string name="title_height">Height</string>
+    <string name="title_my_resolution">My Resolution</string>
+    <string name="title_my_ratio">My Ratio</string>
+    <string name="title_ultrawide">Ultrawide</string>
+    <string name="title_16x9">16x9</string>
+    <string name="title_16x10">16x10</string>
 </resources>

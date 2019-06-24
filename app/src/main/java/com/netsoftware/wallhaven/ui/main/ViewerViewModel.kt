@@ -24,7 +24,7 @@ class ViewerViewModel @Inject constructor(
     private val page = MutableLiveData(listOf<Wallpaper>())
     private val isLoading = MutableLiveData(false)
     private var type: ViewerType = ViewerType.SUITABLE_TYPE
-    private var searchConfig: SearchConfig = SearchConfig()
+    var searchConfig: SearchConfig = SearchConfig()
 
     fun getWalls(): List<Wallpaper> = walls
     fun getPage(): LiveData<List<Wallpaper>> = page

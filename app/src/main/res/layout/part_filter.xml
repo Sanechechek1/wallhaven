@@ -3,15 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="ratioChipClick"
+            type="android.widget.CompoundButton.OnCheckedChangeListener" />
+
+        <variable
+            name="colorChipClick"
+            type="android.widget.CompoundButton.OnCheckedChangeListener" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:background="@color/primary"
-        >
+        tools:background="@color/primary">
 
         <TextView
             android:id="@+id/category_title"
-            style="@style/filter_title"
+            style="@style/FilterTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_category"
@@ -20,7 +30,7 @@
 
         <lib.kingja.switchbutton.SwitchMultiButton
             android:id="@+id/category_switch"
-            style="@style/filter_switch"
+            style="@style/FilterSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +39,7 @@
 
         <TextView
             android:id="@+id/purity_title"
-            style="@style/filter_title"
+            style="@style/FilterTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_purity"
@@ -38,7 +48,7 @@
 
         <lib.kingja.switchbutton.SwitchMultiButton
             android:id="@+id/purity_switch"
-            style="@style/filter_switch"
+            style="@style/FilterSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +57,7 @@
 
         <TextView
             android:id="@+id/resolution_title"
-            style="@style/filter_title"
+            style="@style/FilterTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_resolution"
@@ -56,9 +66,9 @@
 
         <lib.kingja.switchbutton.SwitchMultiButton
             android:id="@+id/resolution_switch"
-            style="@style/filter_switch"
+            style="@style/FilterSwitch"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             app:allowMultiTab="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/resolution_title"
@@ -66,59 +76,73 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/resolution_value"
-            style="@style/filter_button"
+            style="@style/FilterButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/select"
+            app:layout_constraintBottom_toBottomOf="@id/resolution_switch"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@id/resolution_switch"
-            app:layout_constraintTop_toTopOf="@id/resolution_switch"
-            app:layout_constraintBottom_toBottomOf="@id/resolution_switch"
-            />
+            app:layout_constraintTop_toTopOf="@id/resolution_switch" />
 
         <TextView
             android:id="@+id/ratio_title"
-            style="@style/filter_title"
+            style="@style/FilterTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_ratio"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/resolution_switch" />
 
-        <com.google.android.material.button.MaterialButton
+        <HorizontalScrollView
             android:id="@+id/ratio_value"
-            style="@style/filter_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/select"
             android:layout_marginTop="8dp"
+            android:scrollbars="none"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ratio_title" />
+            app:layout_constraintTop_toBottomOf="@id/ratio_title">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/ratio_chipgroup"
+                style="@style/PickerChipgroup"
+                app:chipClick="@{ratioChipClick}"
+                app:darkBackground="@{false}"
+                app:chips="@{@stringArray/ratio_values}"
+                app:singleSelection="true" />
+        </HorizontalScrollView>
 
         <TextView
             android:id="@+id/color_title"
-            style="@style/filter_title"
+            style="@style/FilterTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_color"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ratio_value" />
 
-        <com.google.android.material.button.MaterialButton
+        <HorizontalScrollView
             android:id="@+id/color_value"
-            style="@style/filter_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:layout_marginTop="8dp"
-            android:text="@string/select"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="20dp"
+            android:scrollbars="none"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/color_title" />
+            app:layout_constraintTop_toBottomOf="@id/color_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/color_chipgroup"
+                style="@style/PickerChipgroup"
+                app:chipClick="@{ratioChipClick}"
+                app:darkBackground="@{false}"
+                app:chips="@{@stringArray/color_values}"
+                app:singleSelection="true" />
+        </HorizontalScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

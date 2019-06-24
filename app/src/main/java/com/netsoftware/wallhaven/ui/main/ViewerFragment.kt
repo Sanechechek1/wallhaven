@@ -1,6 +1,6 @@
 package com.netsoftware.wallhaven.ui.main
 
-import android.app.Dialog
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
@@ -25,15 +24,13 @@ import com.netsoftware.wallhaven.WallhavenApp.Companion.TAG
 import com.netsoftware.wallhaven.data.dataSources.local.SharedPrefs
 import com.netsoftware.wallhaven.data.models.SearchConfig
 import com.netsoftware.wallhaven.data.models.Wallpaper
-import com.netsoftware.wallhaven.databinding.PickerResolutionBinding
 import com.netsoftware.wallhaven.databinding.ViewerFragmentBinding
 import com.netsoftware.wallhaven.ui.adapters.ProgressItem
 import com.netsoftware.wallhaven.ui.adapters.WallpaperItem
 import com.netsoftware.wallhaven.ui.main.ViewerViewModel.ViewerType.SUITABLE_TYPE
 import com.netsoftware.wallhaven.ui.views.ImageViewerOverlay
+import com.netsoftware.wallhaven.ui.views.ResolutionPicker
 import com.netsoftware.wallhaven.utility.extensions.GlideApp
-import com.netsoftware.wallhaven.utility.extensions.dpToPx
-import com.netsoftware.wallhaven.utility.managers.MyDisplayManager
 import com.stfalcon.imageviewer.StfalconImageViewer
 import dagger.android.support.DaggerFragment
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -78,6 +75,7 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupViews() {
         binding.toolbarTitle.text = getString(viewerType.titleId).format(searchConfig.q)
         binding.toolbarMenuIcon.setOnClickListener { (activity as MainActivity).openDrawer() }
@@ -103,7 +101,27 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
                 .withEdge(true)
         )
 
+        if (viewerType == SUITABLE_TYPE) {
+//            binding.executePendingBindings()
+//            (binding.filterContent.ratioChipgroup[0] as Chip).isChecked = true
+//            binding.filterContent.resolutionValue.text = searchConfig.resolution_at_least
+//            binding.filterContent.resolutionValue.isEnabled = false
+//            binding.filterContent.resolutionSwitch.setOnTouchListener { _, _ -> true }
+//            binding.filterContent.resolutionSwitch.alpha = 0.7F
+//            binding.filterContent.resolutionValue.alpha = 0.6F
+//            binding.filterContent.ratioChipgroup.alpha = 0.7F
+//            for (chip in binding.filterContent.ratioChipgroup.children) {
+//                chip.setOnTouchListener { _, _ -> true }
+//            }
+        }
         binding.filterContent.resolutionValue.setOnClickListener { showResolutionPicker() }
+        binding.filterContent.resolutionSwitch.setOnSwitchListener { position, _ ->
+            if (position == 0 && searchConfig.resolutions.isNotEmpty()) {
+                searchConfig.resolution_at_least = searchConfig.resolutions.split(",").first()
+                searchConfig.resolutions = ""
+                binding.filterContent.resolutionValue.text = searchConfig.resolution_at_least
+            }
+        }
     }
 
     override fun noMoreLoad(newItemsSize: Int) {
@@ -187,24 +205,27 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
 
     private fun showResolutionPicker() {
         context?.let {
-            val dialog = Dialog(it)
-            val pickerBinding: PickerResolutionBinding =
-                DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.picker_resolution, null, false)
-            val checkedResolutions = mutableListOf<String>()
-            dialog.setContentView(pickerBinding.root)
-            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, MyDisplayManager.getCurentDisplaySize(it).y-50.dpToPx)
-            pickerBinding.resolutionsChipgroup.isSingleSelection = binding.filterContent.resolutionSwitch.getState(0)
-            pickerBinding.chipClick = CompoundButton.OnCheckedChangeListener{ view, isChecked ->
-                if (isChecked){
-                    checkedResolutions.add(view.text.toString())
-                }else{
-                    checkedResolutions.remove(view.text.toString())
-                }
+            val resolutionPicker = ResolutionPicker(
+                it,
+                searchConfig.getResolutionList(),
+                binding.filterContent.resolutionSwitch.getState(0)
+            )
+            resolutionPicker.setOnPositiveButtonClick {
+                val checkedResolutions =
+                    resolutionPicker.getPickedResolution().toString().replace(Regex("[\\[\\]\\s]"), "")
+                binding.filterContent.resolutionValue.text =
+                    SearchConfig.getReadableResolution(resolutionPicker.getPickedResolution()).ifEmpty {
+                        getString(R.string.select)
+                    }
+                if (resolutionPicker.pickResolutionAtLeast)
+                    searchConfig.resolution_at_least = checkedResolutions
+                else searchConfig.resolutions = checkedResolutions
+                resolutionPicker.dismiss()
             }
-            dialog.setOnDismissListener {
-                Log.d(TAG, "showResolutionPicker: $checkedResolutions")
+            resolutionPicker.setOnNegativeButtonClick {
+                resolutionPicker.dismiss()
             }
-            dialog.show()
+            resolutionPicker.show()
         }
     }
 

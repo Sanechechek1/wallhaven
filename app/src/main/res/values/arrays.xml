@@ -15,29 +15,67 @@
         <item>@string/title_resolution_at_least</item>
         <item>@string/title_resolution_exactly</item>
     </array>
-    <string-array name="resolution_values">
-        <item>3840x3072</item>
-        <item>3840x2880</item>
-        <item>3840x2400</item>
-        <item>3840x2160</item>
+    <string-array name="resolution_ultrawide_values">
         <item>3840х1600</item>
         <item>3440х1440</item>
-        <item>2560x2048</item>
-        <item>2560x1920</item>
-        <item>2560x1600</item>
-        <item>2560x1440</item>
         <item>2560х1080</item>
-        <item>1920x1536</item>
-        <item>1920x1440</item>
-        <item>1920x1200</item>
+    </string-array>
+    
+    <string-array name="resolution_16x9_values">
+        <item>3840x2160</item>
+        <item>2560x1440</item>
         <item>1920х1080</item>
-        <item>1600x1280</item>
-        <item>1600x1200</item>
-        <item>1600x1000</item>
         <item>1600х900</item>
-        <item>1280x1024</item>
-        <item>1280x960</item>
-        <item>1280x800</item>
         <item>1280х720</item>
+    </string-array>
+    <string-array name="resolution_16x10_values">
+        <item>3840x2400</item>
+        <item>2560x1600</item>
+        <item>1920x1200</item>
+        <item>1600x1000</item>
+        <item>1280x800</item>
+    </string-array>
+
+    <string-array name="ratio_values">
+        <item>My Ratio</item>
+        <item>9x16</item>
+        <item>10x16</item>
+        <item>16x10</item>
+        <item>16x9</item>
+        <item>21x9</item>
+        <item>31x9</item>
+        <item>48x9</item>
+    </string-array>
+
+    <string-array name="color_values">
+        <item>#660000</item>
+        <item>#990000</item>
+        <item>#cc0000</item>
+        <item>#cc3333</item>
+        <item>#ea4c88</item>
+        <item>#993399</item>
+        <item>#663399</item>
+        <item>#333399</item>
+        <item>#0066cc</item>
+        <item>#0099cc</item>
+        <item>#66cccc</item>
+        <item>#77cc33</item>
+        <item>#669900</item>
+        <item>#336600</item>
+        <item>#666600</item>
+        <item>#999900</item>
+        <item>#cccc33</item>
+        <item>#ffff00</item>
+        <item>#ffcc33</item>
+        <item>#ff9900</item>
+        <item>#ff6600</item>
+        <item>#cc6633</item>
+        <item>#996633</item>
+        <item>#663300</item>
+        <item>#000000</item>
+        <item>#999999</item>
+        <item>#cccccc</item>
+        <item>#ffffff</item>
+        <item>#424153</item>
     </string-array>
 </resources>

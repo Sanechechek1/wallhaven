@@ -3,7 +3,7 @@ package com.netsoftware.wallhaven.data.dataSources.local
 import android.app.Application
 import com.chibatching.kotpref.KotprefModel
 import com.netsoftware.wallhaven.WallhavenApp
-import com.netsoftware.wallhaven.data.models.THUMB_ORIGINAL
+import com.netsoftware.wallhaven.data.models.User.Companion.THUMB_ORIGINAL
 import javax.inject.Inject
 
 class SharedPrefs @Inject constructor(context: Application): KotprefModel(context){
