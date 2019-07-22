@@ -15,7 +15,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/toolbar"
@@ -40,22 +42,42 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <EditText
                 android:id="@+id/toolbar_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
+                android:background="@color/primary"
                 android:ellipsize="end"
+                android:enabled="false"
+                android:hint="@string/hint_search"
+                android:imeOptions="actionSearch"
+                android:inputType="textFilter"
                 android:lines="1"
+                android:singleLine="true"
                 android:textColor="@color/primary_text"
+                android:textCursorDrawable="@drawable/cursor"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/toolbar_filter_icon"
+                app:layout_constraintEnd_toStartOf="@id/toolbar_search_icon"
                 app:layout_constraintStart_toEndOf="@id/toolbar_menu_icon"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Latest" />
+
+            <com.mikepenz.iconics.view.IconicsImageButton
+                android:id="@+id/toolbar_search_icon"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_gravity="end"
+                app:iiv_color="@color/dark_icon_tint"
+                app:iiv_icon="esp-search-1"
+                app:iiv_size="@dimen/iicon_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/toolbar_filter_icon"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.mikepenz.iconics.view.IconicsImageButton
                 android:id="@+id/toolbar_filter_icon"
@@ -86,21 +108,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="@color/material_drawer_background"
+                android:clipToPadding="false"
+                android:paddingStart="1dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="1dp"
+                android:paddingBottom="16dp"
                 tools:itemCount="2"
                 tools:listitem="@layout/rv_item_viewer" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/filter_container"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/info_placeholder"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:layout_marginBottom="16dp"
+            android:drawablePadding="16dp"
+            android:drawableTint="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="22sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar">
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            tools:drawableTop="@drawable/ic_no_connection"
+            tools:text="@string/placeholder_no_internet"
+            tools:visibility="visible" />
 
-            <include android:id="@+id/filter_content" layout="@layout/part_filter" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.netsoftware.wallhaven.ui.views.FilterView
+            android:id="@+id/filter_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimary"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_default="wrap"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintVertical_bias="0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

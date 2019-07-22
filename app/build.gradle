@@ -123,6 +123,15 @@ dependencies {
     //SwitchButton
     implementation 'com.github.fstovarr:SwitchButton:-SNAPSHOT'
 
-    //keyboardListener
-    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.3.0'
+    //SearchUI
+    implementation 'com.github.mancj:MaterialSearchBar:0.8.2'
+
+    //Permission
+    implementation 'gun0912.ted:tedpermission:2.2.2'
+
+    //uCrop
+    implementation 'com.github.yalantis:ucrop:2.2.3-native'
+
+    //blurred dialog
+    implementation 'fr.tvbarthel.blurdialogfragment:lib:2.2.0'
 }

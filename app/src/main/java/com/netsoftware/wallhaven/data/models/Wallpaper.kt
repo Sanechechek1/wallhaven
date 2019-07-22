@@ -18,6 +18,9 @@ data class Wallpaper(
     @SerializedName("path")
     var url: String = "",
 
+    @SerializedName("url")
+    var postUrl: String = "",
+
     @SerializedName("uploader")
     var uploaderName: String = "",
 
@@ -38,6 +41,9 @@ data class Wallpaper(
 
     @Expose
     var ratio: String = MyDisplayManager.findRatio(resolution),
+
+    @Expose
+    var isLiked: Boolean = false,
 
     @SerializedName("file_size")
     var fileSize: String = "",

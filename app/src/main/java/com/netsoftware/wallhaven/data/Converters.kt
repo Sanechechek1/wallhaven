@@ -56,19 +56,19 @@ class Converters {
 class MyDeserializer<T> : JsonDeserializer<T> {
     override fun deserialize(je: JsonElement, type: Type, jdc: JsonDeserializationContext): T {
         val unpackedContent =
-            when (val content = if (je.isJsonObject && je.asJsonObject.has("data")) je.asJsonObject["data"] else je) {
-                is JsonObject -> checkUnpackedDate(content)
-                is JsonArray -> content.asJsonArray.onEach { checkUnpackedDate(it.asJsonObject) }
+            when (val content = if (je.isJsonObject) je.asJsonObject["data"] else je) {
+                is JsonObject -> checkUnpackedUploader(content)
+                is JsonArray -> content.asJsonArray.onEach { checkUnpackedUploader(it.asJsonObject) }
                 else -> content
             }
         return WallhavenApp.appComponent.getGson().fromJson(unpackedContent, type)
     }
 
-    private fun checkUnpackedDate(data: JsonObject): JsonObject {
-        if (data.has("created_at")) {
+    private fun checkUnpackedUploader(data: JsonObject): JsonObject {
+        if (data.has("uploader")) {
             data.addProperty(
-                "created_at",
-                data["created_at"].asJsonObject["date"].asString
+                "uploader",
+                data["uploader"].asJsonObject["username"].asString
             )
         }
         return data

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="dialog_overlay">#CC222121</color>
     <color name="darkGray">#3A3939</color>
     <color name="gray">#444444</color>
     <color name="white">#F0E9E9</color>
@@ -20,7 +21,7 @@
     <color name="primary_light_text">#DEFFFFFF</color>
     <color name="secondary_light_text">#8AFFFFFF</color>
 
-    <!-- OVERWRITE THESE COLORS FOR THEME -->
+    <!-- OVERWRITE THESE COLORS FOR THEME MATERIAL DRAWER -->
     <!-- MaterialDrawer DEFAULT colors -->
     <color name="material_drawer_background">#292828</color>
     <color name="material_drawer_background_alpha">#991A1A1A</color>
@@ -37,4 +38,15 @@
     <color name="material_drawer_selected_text">#00AA97</color>
     <color name="material_drawer_header_selection_text">#FFFFFFFF</color>
     <color name="material_drawer_header_selection_subtext">#B3FFFFFF</color>
+
+    <!-- OVERWRITE THESE COLORS FOR THEME CROP ACTIVITY -->
+    <color name="ucrop_color_toolbar" tools:override="true">@color/primary</color>
+    <color name="ucrop_color_statusbar" tools:override="true">@color/primary_dark</color>
+    <color name="ucrop_color_toolbar_widget" tools:override="true">@color/primary_text</color>
+
+    <color name="ucrop_color_widget_active" tools:override="true">@color/primary_text</color>
+    <color name="ucrop_color_active_controls_color" tools:override="true">@color/primary_text</color>
+    <color name="ucrop_color_widget_rotate_mid_line" tools:override="true">@color/primary</color>
+    <color name="ucrop_color_widget_background" tools:override="true">@color/primary</color>
+    <color name="ucrop_color_active_controls_bg" tools:override="true">@color/material_drawer_background</color>
 </resources>

@@ -21,7 +21,7 @@ class RepositoriesModule{
 
     @Singleton
     @Provides
-    fun provideWallpaperRepository(whDao: WallpaperDao): WallpaperRepository {
-        return WallpaperRepository(whDao)
+    fun provideWallpaperRepository(whDao: WallpaperDao, wallhavenApi: WallhavenApi): WallpaperRepository {
+        return WallpaperRepository(whDao, wallhavenApi)
     }
 }

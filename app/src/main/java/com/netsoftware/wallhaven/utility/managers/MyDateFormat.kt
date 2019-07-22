@@ -4,5 +4,5 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object MyDateFormat{
-    val serverDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.ENGLISH)
+    val serverDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 }

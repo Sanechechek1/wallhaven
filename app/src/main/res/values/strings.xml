@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Wallhaven</string>
-    <string name="accept">Accept</string>
+    <string name="apply">Accept</string>
     <string name="cancel">Cancel</string>
+    <string name="select">Select</string>
+    <string name="delimiter">x</string>
+    <string name="title_default">Default</string>
     <string name="title_search">Search: %1$s</string>
     <string name="title_suitable">Suitable</string>
     <string name="title_latest">Latest</string>
@@ -18,6 +21,10 @@
     <string name="title_purity_sketchy">Sketchy</string>
     <string name="title_resolution_at_least">At Least</string>
     <string name="title_resolution_exactly">Exactly</string>
+    <string name="image_saved">Image Saved</string>
+    <string name="hint_search">Search…</string>
+    <string name="placeholder_search_empty">&lt;There\'s nothing here…/&gt;</string>
+    <string name="placeholder_no_internet">&lt;No internet. Please turn it on./&gt;</string>
     <string name="backPressToExitApp">Click back again to exit</string>
     <string name="easterEggText">Oh, it looks like Easter egg, have a nice day)</string>
 
@@ -25,7 +32,6 @@
     <string name="title_detail_size">Size: %1$s</string>
     <string name="title_detail_category">Category: %1$s</string>
     <string name="title_detail_purity">Purity: %1$s</string>
-    <string name="select">Select</string>
     <string name="title_purity">Purity</string>
     <string name="title_resolution">Resolution</string>
     <string name="title_ratio">Ratio</string>
@@ -34,11 +40,22 @@
     <string name="title_select_resolution">Select resolution</string>
     <string name="title_custom_resolution">Custom Resolution</string>
     <string name="title_width">Width</string>
-    <string name="delimiter">x</string>
     <string name="title_height">Height</string>
     <string name="title_my_resolution">My Resolution</string>
-    <string name="title_my_ratio">My Ratio</string>
+    <string name="title_my">My %1$s</string>
     <string name="title_ultrawide">Ultrawide</string>
     <string name="title_16x9">16x9</string>
     <string name="title_16x10">16x10</string>
+
+    <string name="permission_storage_denied">If you reject permission,you can not save image.
+        \n\nPlease turn on permissions at [Setting] > [Permission]</string>
+    <string name="title_crop">Edit Wallpaper</string>
+    <string name="title_set_wall">Where you want set wallpaper?</string>
+    <string name="title_home">HOME</string>
+    <string name="title_lock">LOCK</string>
+    <string name="title_both">BOTH</string>
+    <string name="home_wall_changed">Home Screen Wallpaper Changed</string>
+    <string name="lock_wall_changed">Lock Screen Wallpaper Changed</string>
+    <string name="both_wall_changed">Both Wallpapers Changed</string>
+    <string name="info_setting_wallpaper">Setting Wallpaper…</string>
 </resources>

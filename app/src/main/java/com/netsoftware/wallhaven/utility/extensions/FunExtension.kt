@@ -4,12 +4,15 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.util.TypedValue
 import androidx.navigation.NavArgument
+import com.google.android.material.snackbar.Snackbar
+import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.data.models.Tag
 import com.netsoftware.wallhaven.data.models.User.Companion.THUMB_ORIGINAL
 import com.netsoftware.wallhaven.data.models.Wallpaper
 import com.netsoftware.wallhaven.utility.managers.MyDisplayManager
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import java.text.DecimalFormat
 
 
 val Int.pxToDp: Int
@@ -41,9 +44,29 @@ fun `in`.nerd_is.wallhaven4kotlin.model.Wallpaper.convert(): Wallpaper {
     )
 }
 
+fun String.sizeToReadable(): String {
+    val format = DecimalFormat("#.##")
+    val megabyte = 1024 * 1024
+    val kilobyte = 1024
+    val size = this.toLong()
+    if (size > megabyte) {
+        return format.format(size / megabyte) + " MiB"
+    }
+    if (size > kilobyte) {
+        return format.format(size / kilobyte) + " KiB"
+    }
+    return format.format(size) + " B"
+}
+
 fun Map<String, NavArgument>.toBundle(): Bundle {
     val result = Bundle()
     for (entry in this.entries)
         result.putString(entry.key, entry.value.toString())
     return result
+}
+
+fun Snackbar.changeColors(): Snackbar{
+    this.setTextColor(this.context.getColor(R.color.primary_light_text))
+    this.setBackgroundTint(this.context.getColor(R.color.gray))
+    return this
 }

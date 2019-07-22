@@ -1,28 +1,32 @@
 package com.netsoftware.wallhaven.ui.main
 
 import android.os.Bundle
-import android.widget.Toast
+import android.view.View
+import android.view.animation.AnimationUtils
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import co.zsmb.materialdrawerkt.builders.accountHeader
 import co.zsmb.materialdrawerkt.builders.drawer
 import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
+import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.essentialpack_typeface_library.EssentialPack
 import com.mikepenz.materialdrawer.Drawer
 import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.databinding.MainActivityBinding
 import com.netsoftware.wallhaven.ui.main.ViewerViewModel.ViewerType.*
+import com.netsoftware.wallhaven.utility.extensions.changeColors
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class MainActivity : DaggerAppCompatActivity() {
     lateinit var drawer: Drawer
     lateinit var binding: MainActivityBinding
     lateinit var navController: NavController
+    val coroutineScope = CoroutineScope(Dispatchers.Main)
     private val titleMap = mapOf<String, Long>(
         SUITABLE_TYPE.name to 1,
         LATEST_TYPE.name to 2,
@@ -125,7 +129,8 @@ class MainActivity : DaggerAppCompatActivity() {
             oopsCounter++
             if (oopsCounter > 10) {
                 oopsCounter = 0
-                Toast.makeText(this, getString(R.string.easterEggText), Toast.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, getString(R.string.easterEggText), Snackbar.LENGTH_SHORT)
+                    .changeColors().show()
             }
         }
     }
@@ -157,25 +162,53 @@ class MainActivity : DaggerAppCompatActivity() {
         }
     }
 
+    fun showInfo(info: String, onlyChangeText: Boolean) {
+        binding.infoPanel.apply {
+            if (!onlyChangeText || !isVisible) {
+                text = info
+                startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_bottom_to_up))
+                visibility = View.VISIBLE
+            } else {
+                text = info
+                startAnimation(AnimationUtils.loadAnimation(context, R.anim.shake_horisontal))
+            }
+        }
+    }
+
+    fun closeInfo() {
+        binding.infoPanel.apply {
+            startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_bottom_to_down))
+            visibility = View.GONE
+        }
+    }
+
     override fun onBackPressed() {
-        val backStackCount =
-            supportFragmentManager.findFragmentById(R.id.nav_host_frag)?.childFragmentManager?.backStackEntryCount
+        val childFragmentManager =
+            (supportFragmentManager.findFragmentById(R.id.nav_host_frag) as? NavHostFragment)?.childFragmentManager
         when {
             drawer.isDrawerOpen -> drawer.closeDrawer()
-            backStackCount == 0 -> {
-                if (!exitAppPressed) {
-                    Toast.makeText(this, getString(R.string.backPressToExitApp), Toast.LENGTH_SHORT).show()
-                    exitAppPressed = true
-                    GlobalScope.launch {
-                        delay(2000)
-                        synchronized(this) {
-                            exitAppPressed = false
-                        }
+            childFragmentManager?.fragments?.get(0) is OnBackPressed -> {
+                (childFragmentManager.fragments[0] as? OnBackPressed)
+                    ?.onBackPressed()?.takeIf { !it }?.let {
+                        if (childFragmentManager.backStackEntryCount == 0 && !exitAppPressed) {
+                            showInfo(getString(R.string.backPressToExitApp), false)
+                            exitAppPressed = true
+                            coroutineScope.launch {
+                                delay(2000)
+                                synchronized(this) {
+                                    exitAppPressed = false
+                                    closeInfo()
+                                }
+                            }
+                        } else super.onBackPressed()
                     }
-                } else super.onBackPressed()
             }
-            else -> super.onBackPressed()
         }
+    }
 
+    @ExperimentalCoroutinesApi
+    override fun onDestroy() {
+        super.onDestroy()
+        coroutineScope.cancel()
     }
 }

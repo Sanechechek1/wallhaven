@@ -14,12 +14,18 @@ import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.data.dataSources.local.SharedPrefs
 import com.netsoftware.wallhaven.data.models.Tag
 import com.netsoftware.wallhaven.data.models.Wallpaper
+import com.netsoftware.wallhaven.ui.main.ViewerViewModel
 import com.netsoftware.wallhaven.utility.extensions.GlideApp
+import com.netsoftware.wallhaven.utility.extensions.sizeToReadable
 
 object CustomBindings {
     @JvmStatic
-    @BindingAdapter("imageThumbs")
-    fun bindImageView(imageView: ImageView, imageThumbs: MutableMap<String, String>) {
+    @BindingAdapter("imageThumbs", "viewerType", requireAll = false)
+    fun bindImageView(
+        imageView: ImageView,
+        imageThumbs: MutableMap<String, String>,
+        viewerType: ViewerViewModel.ViewerType
+    ) {
         val thumbSize = SharedPrefs.getSharedPrefs().thumbSize
         if (imageThumbs.isNotEmpty()) {
             imageView.clipToOutline = true
@@ -28,10 +34,9 @@ object CustomBindings {
             if (imageView.getTag(R.id.image_url) == null || imageView.getTag(R.id.image_url) != imageThumbs[thumbSize]) {
                 imageView.setImageBitmap(null)
                 imageView.setTag(R.id.image_url, imageThumbs[thumbSize])
-                GlideApp.with(imageView)
-                    .load(imageThumbs[thumbSize])
-                    .centerInside()
-                    .into(imageView)
+                val request = GlideApp.with(imageView).load(imageThumbs[thumbSize])
+                if (viewerType == ViewerViewModel.ViewerType.SUITABLE_TYPE) request.centerCrop() else request.centerInside()
+                request.into(imageView)
             }
         } else {
             imageView.setTag(R.id.image_url, null)
@@ -46,11 +51,11 @@ object CustomBindings {
             R.id.detail_resolution -> textView.text =
                 textView.resources.getString(R.string.title_detail_resolution).format(wallpaper.resolution)
             R.id.detail_size -> textView.text =
-                textView.resources.getString(R.string.title_detail_size).format(wallpaper.fileSize)
+                textView.resources.getString(R.string.title_detail_size).format(wallpaper.fileSize.sizeToReadable())
             R.id.detail_category -> textView.text =
-                textView.resources.getString(R.string.title_detail_category).format(wallpaper.category)
+                textView.resources.getString(R.string.title_detail_category).format(wallpaper.category.toUpperCase())
             R.id.detail_purity -> textView.text =
-                textView.resources.getString(R.string.title_detail_purity).format(wallpaper.purity)
+                textView.resources.getString(R.string.title_detail_purity).format(wallpaper.purity.toUpperCase())
         }
     }
 
@@ -75,34 +80,48 @@ object CustomBindings {
         darkBackground: Boolean,
         onCheckedChangeListener: CompoundButton.OnCheckedChangeListener?
     ) {
+        val myRatio = SharedPrefs.getSharedPrefs().screenRatio
         val itsColors = chips[0][0] == '#'
+        val createChip = fun(): Chip {
+            return Chip(chipGroup.context).apply {
+                setChipDrawable(
+                    ChipDrawable.createFromAttributes(
+                        chipGroup.context, null, 0,
+                        if (darkBackground) R.style.Base_Base_Widget_MaterialComponents_Chip_MyChip_Dark
+                        else R.style.Base_Base_Widget_MaterialComponents_Chip_MyChip_Light
+                    )
+                )
+                setOnCheckedChangeListener(onCheckedChangeListener)
+            }
+        }
+        if (!itsColors && !chips.contains(myRatio))
+            chipGroup.addView(createChip().apply {
+                text = chipGroup.context.getString(R.string.title_my, myRatio)
+            })
         for (chipText in chips) {
-            val chip = Chip(chipGroup.context)
-            chip.setChipDrawable(
-                ChipDrawable.createFromAttributes(
-                    chipGroup.context, null, 0,
-                    if (darkBackground) R.style.Base_Base_Widget_MaterialComponents_Chip_MyChip_Dark
-                    else R.style.Base_Base_Widget_MaterialComponents_Chip_MyChip_Light
-                )
-            )
-            if (itsColors) {
-                chip.chipBackgroundColor = ColorStateList(
-                    arrayOf(
-                        intArrayOf(android.R.attr.state_enabled)
-                    ),
-                    intArrayOf(Color.parseColor(chipText))
-                )
-                chip.isCheckedIconVisible = true
-                chip.chipStartPadding = chip.chipMinHeight / 2
-                chip.chipEndPadding = chip.chipMinHeight / 2
-                chip.textEndPadding = 0F
-                chip.textStartPadding = 0F
-                chip.closeIconEndPadding = 0F
-                chip.closeIconStartPadding = 0F
-                chip.iconStartPadding = 0F
-                chip.iconEndPadding = 0F
-            } else chip.text = chipText
-            chip.setOnCheckedChangeListener(onCheckedChangeListener)
+            val chip = createChip()
+            when {
+                itsColors -> chip.apply {
+                    chipBackgroundColor = ColorStateList(
+                        arrayOf(
+                            intArrayOf(android.R.attr.state_enabled)
+                        ),
+                        intArrayOf(Color.parseColor(chipText))
+                    )
+                    tag = chipText
+                    isCheckedIconVisible = true
+                    chipStartPadding = chip.chipMinHeight / 2
+                    chipEndPadding = chip.chipMinHeight / 2
+                    textEndPadding = 0F
+                    textStartPadding = 0F
+                    closeIconEndPadding = 0F
+                    closeIconStartPadding = 0F
+                    iconStartPadding = 0F
+                    iconEndPadding = 0F
+                }
+                chipText == myRatio -> chip.text = chipGroup.context.getString(R.string.title_my, chipText)
+                else -> chip.text = chipText
+            }
             chipGroup.addView(chip)
         }
     }

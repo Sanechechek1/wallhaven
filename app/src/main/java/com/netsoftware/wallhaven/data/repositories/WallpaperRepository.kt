@@ -1,7 +1,7 @@
 package com.netsoftware.wallhaven.data.repositories
 
 import com.netsoftware.wallhaven.data.dataSources.local.WallpaperDao
-import com.netsoftware.wallhaven.data.dataSources.remote.WallhavenScrapper
+import com.netsoftware.wallhaven.data.dataSources.remote.WallhavenApi
 import com.netsoftware.wallhaven.data.models.SearchConfig
 import com.netsoftware.wallhaven.data.models.Wallpaper
 import io.reactivex.Maybe
@@ -10,23 +10,21 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class WallpaperRepository @Inject constructor(
-    private val wpDao: WallpaperDao
+    private val wpDao: WallpaperDao,
+    private val wallhavenApi: WallhavenApi
 ) {
     fun getWallpaper(id: String): Maybe<Wallpaper> {
-        return wpDao.getWallpaper(id).switchIfEmpty(Maybe.fromCallable {
-           WallhavenScrapper.wallpaper(id)
-//            WallHaven.getWallpaper(id.toLong()).convert()
-        })
+        return wpDao.getWallpaper(id).switchIfEmpty(wallhavenApi.getWallpaper(id))
     }
 
     fun getLatest(searchConfig: SearchConfig): Single<List<Wallpaper>> =
-        Single.fromCallable { WallhavenScrapper.latest(searchConfig)}
+        wallhavenApi.getSearch(searchConfig.copy(sorting = SearchConfig.SORTING_DATE_ADDED).toMap())
 
     fun getTopList(searchConfig: SearchConfig): Single<List<Wallpaper>> =
-        Single.fromCallable { WallhavenScrapper.topList(searchConfig) }
+        wallhavenApi.getSearch(searchConfig.copy(sorting = SearchConfig.SORTING_TOP_LIST).toMap())
 
     fun getRandom(searchConfig: SearchConfig): Single<List<Wallpaper>> =
-        Single.fromCallable { WallhavenScrapper.random(searchConfig) }
+        wallhavenApi.getSearch(searchConfig.copy(sorting = SearchConfig.SORTING_RANDOM).toMap())
 
     fun saveWallpaper(wallpaper: Wallpaper): Single<Unit> {
         return Single.fromCallable { wpDao.simpleInsert(wallpaper) }.subscribeOn(Schedulers.io())

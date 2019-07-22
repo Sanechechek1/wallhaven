@@ -5,13 +5,15 @@ import androidx.constraintlayout.widget.ConstraintSet
 import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.data.models.Wallpaper
 import com.netsoftware.wallhaven.databinding.RvItemViewerBinding
+import com.netsoftware.wallhaven.ui.main.ViewerViewModel
 import com.netsoftware.wallhaven.utility.managers.MyDisplayManager
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFlexible
 import eu.davidea.viewholders.FlexibleViewHolder
 
-class WallpaperItem(private var wallpaper: Wallpaper) : AbstractFlexibleItem<WallpaperItem.WallpapersViewHolder>() {
+class WallpaperItem(private var wallpaper: Wallpaper, private val type: ViewerViewModel.ViewerType) :
+    AbstractFlexibleItem<WallpaperItem.WallpapersViewHolder>() {
 
     override fun equals(other: Any?): Boolean {
         return if (other is Wallpaper) {
@@ -44,8 +46,12 @@ class WallpaperItem(private var wallpaper: Wallpaper) : AbstractFlexibleItem<Wal
             with(binding) {
                 val set = ConstraintSet()
                 set.clone(container)
-                set.setDimensionRatio(ivThumbnail.id, wallpaper.ratio.replace(MyDisplayManager.resolutionDelimiter, ":"))
+                set.setDimensionRatio(
+                    ivThumbnail.id,
+                    wallpaper.ratio.replace(MyDisplayManager.delimiter, ":")
+                )
                 set.applyTo(container)
+                binding.viewerType = type
                 binding.wallpaper = wallpaper
                 binding.executePendingBindings()
             }

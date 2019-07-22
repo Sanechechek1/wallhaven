@@ -10,7 +10,7 @@ import com.netsoftware.wallhaven.data.models.Tag
 import com.netsoftware.wallhaven.data.models.User
 import com.netsoftware.wallhaven.data.models.Wallpaper
 
-@Database(entities = [User::class, Wallpaper::class, Tag::class], version = 1)
+@Database(entities = [User::class, Wallpaper::class, Tag::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class WallhavenDB : RoomDatabase() {
 

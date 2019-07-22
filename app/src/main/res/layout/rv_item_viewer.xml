@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="position"
             type="java.lang.Integer" />
@@ -14,22 +13,23 @@
             type="com.netsoftware.wallhaven.data.models.Wallpaper" />
 
         <variable
-            name="viewModel"
-            type="com.netsoftware.wallhaven.ui.main.ViewerViewModel" />
+            name="viewerType"
+            type="com.netsoftware.wallhaven.ui.main.ViewerViewModel.ViewerType" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rv_item_image_border_bg">
+        >
 
         <ImageView
             android:id="@+id/ivThumbnail"
+            android:layout_margin="1dp"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="1dp"
-            android:background="@drawable/rv_item_image_rounded_bg"
+            android:scaleType="centerCrop"
+            app:viewerType="@{viewerType}"
             app:imageThumbs="@{wallpaper.thumbs}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

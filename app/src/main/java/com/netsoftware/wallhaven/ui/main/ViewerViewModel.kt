@@ -1,5 +1,6 @@
 package com.netsoftware.wallhaven.ui.main
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +14,10 @@ import com.netsoftware.wallhaven.utility.extensions.BaseViewModel
 import com.netsoftware.wallhaven.utility.extensions.addTo
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.io.File
+import java.io.FileOutputStream
 import javax.inject.Inject
 
 class ViewerViewModel @Inject constructor(
@@ -23,16 +27,22 @@ class ViewerViewModel @Inject constructor(
     private val walls = mutableListOf<Wallpaper>()
     private val page = MutableLiveData(listOf<Wallpaper>())
     private val isLoading = MutableLiveData(false)
+    private val isError = MutableLiveData(false)
     private var type: ViewerType = ViewerType.SUITABLE_TYPE
+    var fetchedWall = MutableLiveData<Wallpaper>()
+    var savedPath = MutableLiveData<String>()
     var searchConfig: SearchConfig = SearchConfig()
+    var defaultSearchConfig: SearchConfig = SearchConfig()
 
     fun getWalls(): List<Wallpaper> = walls
     fun getPage(): LiveData<List<Wallpaper>> = page
     fun isLoading(): LiveData<Boolean> = isLoading
+    fun isError(): LiveData<Boolean> = isError
 
     fun init(type: ViewerType, searchConfig: SearchConfig = SearchConfig()) {
         this.type = type
         this.searchConfig = searchConfig
+        this.defaultSearchConfig = searchConfig
         if (walls.isEmpty()) {
             loadByType()
         } else page.value = walls
@@ -48,13 +58,13 @@ class ViewerViewModel @Inject constructor(
     }
 
     fun refresh() {
+        loadByType()
         walls.clear()
         page.value = listOf()
-        loadByType()
     }
 
     fun search(searchConfig: SearchConfig) {
-        this.searchConfig = searchConfig
+        this.searchConfig = SearchConfig(searchConfig)
         refresh()
     }
 
@@ -62,13 +72,6 @@ class ViewerViewModel @Inject constructor(
         isLoading.value = true
         wallpaperRepository.getLatest(searchConfig.copy(page = page.toString()))
             .config()
-            .subscribe({
-                walls.addAll(it)
-                this.page.value = it
-            }, {
-                Log.d(WallhavenApp.TAG, "loadLatest: error = $it")
-                it.printStackTrace()
-            })
             .addTo(compositeDisposable)
     }
 
@@ -76,13 +79,6 @@ class ViewerViewModel @Inject constructor(
         isLoading.value = true
         wallpaperRepository.getTopList(searchConfig.copy(page = page.toString()))
             .config()
-            .subscribe({
-                walls.addAll(it)
-                this.page.value = it
-            }, {
-                Log.d(WallhavenApp.TAG, "loadToplist: error = $it")
-                it.printStackTrace()
-            })
             .addTo(compositeDisposable)
     }
 
@@ -90,25 +86,19 @@ class ViewerViewModel @Inject constructor(
         isLoading.value = true
         wallpaperRepository.getRandom(searchConfig.copy(page = page.toString()))
             .config()
-            .subscribe({
-                walls.addAll(it)
-                this.page.value = it
-            }, {
-                Log.d(WallhavenApp.TAG, "loadRandom: error = $it")
-                it.printStackTrace()
-            })
             .addTo(compositeDisposable)
     }
 
-    fun fetchDetails(position: Int, callback: (wall: Wallpaper) -> Unit) {
-        if (position >= 0 && position < walls.size && walls[position].url.isEmpty()) {
+    fun fetchDetails(position: Int){
+        fetchedWall.value = walls[position]
+        if (position >= 0 && position < walls.size && walls[position].tags.isEmpty()) {
             wallpaperRepository.getWallpaper(walls[position].id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry(2)
                 .subscribe({
                     walls[position] = it
-                    callback(it)
+                    fetchedWall.value = it
                 }, {
                     Log.d(WallhavenApp.TAG, "fetchDetails: error = $it")
                     it.printStackTrace()
@@ -117,11 +107,53 @@ class ViewerViewModel @Inject constructor(
         }
     }
 
-    private fun Single<List<Wallpaper>>.config(): Single<List<Wallpaper>> {
+    fun saveToGallery(image: Bitmap, path: String) {
+        savedPath.value = ""
+        Single.fromCallable {
+            var savedImagePath = ""
+            val storageDir = File(path).parentFile
+            var success = true
+            if (!storageDir.exists()) {
+                success = storageDir.mkdirs()
+            }
+            if (success) {
+                val imageFile = File(path)
+                savedImagePath = imageFile.absolutePath
+                try {
+                    val fOut = FileOutputStream(imageFile)
+                    image.compress(Bitmap.CompressFormat.JPEG, 100, fOut)
+                    fOut.close()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            savedImagePath
+        }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                savedPath.value = it
+            }, {
+                savedPath.value = "error"
+                Log.d(WallhavenApp.TAG, "saveToGallery: error = $it")
+                it.printStackTrace()
+            })
+            .addTo(compositeDisposable)
+    }
+
+    private fun Single<List<Wallpaper>>.config(): Disposable {
         return this.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doFinally { isLoading.value = false }
-            .retry(2)
+            .retry(1).subscribe({
+                isLoading.value = false
+                walls.addAll(it)
+                page.value = it
+                if (isError.value == true) isError.value = false
+            }, {
+                isLoading.value = false
+                isError.value = true
+                Log.d(WallhavenApp.TAG, "loadWalls: error = $it")
+                it.printStackTrace()
+            })
     }
 
     enum class ViewerType(val titleId: Int) {

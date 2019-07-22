@@ -56,7 +56,7 @@ class ResolutionPicker(
             if (pickResolutionAtLeast && checkedResolutions.isNotEmpty()) {
                 clearSelection()
                 view.isChecked = isChecked
-                if (!checkedResolutions.contains(chipText)) checkedResolutions.add(chipText)
+                if (!checkedResolutions.contains(chipText) && isChecked) checkedResolutions.add(chipText)
                 clearCustomResolution()
             } else {
                 if (isChecked) {
@@ -92,13 +92,13 @@ class ResolutionPicker(
         val width = pickerBinding.widthInput.editText?.text.toString()
         val height = pickerBinding.heightInput.editText?.text.toString()
         return if (width.isNotEmpty() && height.isNotEmpty())
-            pickerBinding.widthInput.editText?.text.toString() + MyDisplayManager.resolutionDelimiter +
+            pickerBinding.widthInput.editText?.text.toString() + MyDisplayManager.delimiter +
                     pickerBinding.heightInput.editText?.text.toString()
         else ""
     }
 
     private fun setCustomResolution(resolution: String) {
-        val resSplitted = resolution.split(MyDisplayManager.resolutionDelimiter)
+        val resSplitted = resolution.split(MyDisplayManager.delimiter)
         pickerBinding.widthInput.editText?.setText(resSplitted[0])
         pickerBinding.heightInput.editText?.setText(resSplitted[1])
         oldCustomResolution = resolution
@@ -140,7 +140,7 @@ class ResolutionPicker(
     }
 
     fun setOnPositiveButtonClick(l: (View) -> Unit) {
-        pickerBinding.acceptButton.setOnClickListener { l(pickerBinding.acceptButton) }
+        pickerBinding.applyButton.setOnClickListener { l(pickerBinding.applyButton) }
     }
 
     fun setOnNegativeButtonClick(l: (View) -> Unit) {

@@ -80,7 +80,7 @@ class DataModule{
         return Retrofit.Builder()
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
-            .baseUrl("http://stest39.wallhaven.cc/api/v1/")
+            .baseUrl("https://wallhaven.cc/api/v1/")
             .build().create(WallhavenApi::class.java)
     }
 }

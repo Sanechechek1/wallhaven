@@ -101,4 +101,10 @@
         <item name="android:textAppearance">@style/ChipLightTextAppearance</item>
         <item name="chipCornerRadius">5dp</item>
     </style>
+
+    <style name="MyDialog" parent="android:Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

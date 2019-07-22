@@ -11,6 +11,7 @@ import okhttp3.HttpUrl
 import java.io.InterruptedIOException
 import java.net.SocketTimeoutException
 
+@Deprecated("Changed to WallhavenApi")
 object WallhavenScrapper {
     private val base = HttpUrl.parse("https://alpha.wallhaven.cc")!!
 

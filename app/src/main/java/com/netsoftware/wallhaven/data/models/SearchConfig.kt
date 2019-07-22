@@ -19,12 +19,82 @@ data class SearchConfig(
     var colors: String = "",
     var page: String = 1.toString()
 ) {
+    constructor(searchConfig: SearchConfig) : this(
+        searchConfig.q,
+        searchConfig.categories,
+        searchConfig.purity,
+        searchConfig.sorting,
+        searchConfig.order,
+        searchConfig.top_range,
+        searchConfig.resolution_at_least,
+        searchConfig.resolutions,
+        searchConfig.ratios,
+        searchConfig.colors,
+        searchConfig.page
+    )
+
+    fun getRatioList(): MutableList<String> {
+        return if (ratios.isNotEmpty()) ratios.split(",").toMutableList()
+        else mutableListOf()
+    }
+
     fun getResolutionList(): MutableList<String> =
         when {
             resolutions.isNotEmpty() -> resolutions.split(",").toMutableList()
             resolution_at_least.isNotEmpty() -> mutableListOf(resolution_at_least)
             else -> mutableListOf()
         }
+
+    fun getCategoriesMap(): MutableMap<String, Boolean> {
+        val result =
+            mutableMapOf(User.CATEGORY_GENERAL to false, User.CATEGORY_ANIME to false, User.CATEGORY_PEOPLE to false)
+        if (categories.length == 3) {
+            categories.mapIndexed { index, c ->
+                if (Character.getNumericValue(c) == 1) {
+                    when (index) {
+                        0 -> result[User.CATEGORY_GENERAL] = true
+                        1 -> result[User.CATEGORY_ANIME] = true
+                        2 -> result[User.CATEGORY_PEOPLE] = true
+                    }
+                }
+            }
+        }
+        return result
+    }
+
+    fun getPurityMap(): Map<String, Boolean> {
+        val result =
+            mutableMapOf(User.PURITY_SFW to false, User.PURITY_SKETCHY to false, User.PURITY_NSFW to false)
+        if (purity.length == 3) {
+            purity.mapIndexed { index, c ->
+                if (Character.getNumericValue(c) == 1) {
+                    when (index) {
+                        0 -> result[User.PURITY_SFW] = true
+                        1 -> result[User.PURITY_SKETCHY] = true
+                        2 -> result[User.PURITY_NSFW] = true
+                    }
+                }
+            }
+        }
+        return result
+    }
+
+    fun toMap(): Map<String, String> {
+        return mutableMapOf(
+            Q to q,
+            CATEGORIES to categories,
+            PURITY to purity,
+            SORTING to sorting,
+            ORDER to order,
+            RESOLUTION_AT_LEAST to resolution_at_least,
+            RESOLUTIONS to resolutions,
+            RATIOS to ratios,
+            COLORS to colors,
+            PAGE to page
+        ).apply {
+            if (sorting == SORTING_TOP_LIST) this[TOP_RANGE] = top_range
+        }
+    }
 
     companion object {
         /**
@@ -95,6 +165,10 @@ data class SearchConfig(
                 resolutions.count() == 1 -> resolutions.first()
                 else -> ""
             }
+        }
+
+        fun listToProperty(list: List<String>): String {
+            return list.toString().replace(Regex("[\\[\\]\\s]"), "")
         }
 
         fun getReadableRatio(ratios: String): String {

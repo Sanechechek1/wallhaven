@@ -37,7 +37,6 @@
     </string-array>
 
     <string-array name="ratio_values">
-        <item>My Ratio</item>
         <item>9x16</item>
         <item>10x16</item>
         <item>16x10</item>
