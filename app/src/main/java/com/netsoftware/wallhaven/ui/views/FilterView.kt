@@ -130,9 +130,11 @@ class FilterView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
         binding.resolutionSwitch.setOnTouchListener { _, _ -> true }
         binding.resolutionSwitch.alpha = 0.7F
         binding.resolutionValueBtn.alpha = 0.6F
-        binding.ratioChipgroup.alpha = 0.7F
-        for (chip in binding.ratioChipgroup.children) {
-            chip.setOnTouchListener { _, _ -> true }
+        if (SharedPrefs.getSharedPrefs().suitableRatioOn) {
+            binding.ratioChipgroup.alpha = 0.7F
+            for (chip in binding.ratioChipgroup.children) {
+                chip.setOnTouchListener { _, _ -> true }
+            }
         }
     }
 

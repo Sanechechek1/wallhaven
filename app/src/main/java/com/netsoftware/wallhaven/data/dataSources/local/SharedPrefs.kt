@@ -13,6 +13,7 @@ class SharedPrefs @Inject constructor(context: Application): KotprefModel(contex
     var screenResolution by stringPref()
     var screenRatio by stringPref()
     var thumbSize by stringPref(THUMB_ORIGINAL)
+    var suitableRatioOn by booleanPref(false)
 
     companion object{
         fun getSharedPrefs() = WallhavenApp.appComponent.getSharedPrefs()

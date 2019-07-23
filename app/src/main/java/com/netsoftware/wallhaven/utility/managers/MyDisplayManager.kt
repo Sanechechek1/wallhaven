@@ -13,7 +13,7 @@ object MyDisplayManager {
         Point().also {
             (WallhavenApp.appComponent.getAppContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager)
                 .defaultDisplay
-                .apply { getSize(it) }
+                .apply { getRealSize(it) }
         }
     }
 

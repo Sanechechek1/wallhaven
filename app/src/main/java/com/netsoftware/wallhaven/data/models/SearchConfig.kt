@@ -1,7 +1,7 @@
 package com.netsoftware.wallhaven.data.models
 
 import android.os.Bundle
-import com.netsoftware.wallhaven.WallhavenApp
+import com.netsoftware.wallhaven.data.dataSources.local.SharedPrefs
 import com.netsoftware.wallhaven.data.models.User.Companion.TOPLIST_MONTH
 import com.netsoftware.wallhaven.ui.main.ViewerFragmentArgs
 import com.netsoftware.wallhaven.ui.main.ViewerViewModel.ViewerType.SUITABLE_TYPE
@@ -151,8 +151,11 @@ data class SearchConfig(
             val viewerType = bundle?.let { ViewerFragmentArgs.fromBundle(it).viewerType } ?: SUITABLE_TYPE
             if (viewerType == SUITABLE_TYPE) {
                 searchConfig.apply {
-                    resolution_at_least = WallhavenApp.appComponent.getSharedPrefs().screenResolution
-                    ratios = WallhavenApp.appComponent.getSharedPrefs().screenRatio
+                    SharedPrefs.getSharedPrefs().apply {
+                        resolution_at_least = screenResolution
+                        if (suitableRatioOn)
+                            ratios = screenRatio
+                    }
                 }
             }
             searchConfig.q = bundle?.let { ViewerFragmentArgs.fromBundle(it).searchQuery } ?: ""

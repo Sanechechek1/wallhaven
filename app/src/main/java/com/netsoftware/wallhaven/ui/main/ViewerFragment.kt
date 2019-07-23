@@ -50,7 +50,6 @@ import com.yalantis.ucrop.UCropActivity
 import dagger.android.support.DaggerFragment
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.common.FlexibleItemDecoration
-import eu.davidea.flexibleadapter.common.SmoothScrollGridLayoutManager
 import eu.davidea.flexibleadapter.common.SmoothScrollStaggeredLayoutManager
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.disposables.CompositeDisposable
@@ -135,9 +134,7 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
                 .setEndlessScrollThreshold(14)
                 .endlessPageSize = 24
             recyclerView.adapter = this@ViewerFragment.adapter
-            recyclerView.layoutManager =
-                if (viewerType == SUITABLE_TYPE) SmoothScrollGridLayoutManager(context, spanCount)
-                else SmoothScrollStaggeredLayoutManager(context, spanCount)
+            recyclerView.layoutManager = SmoothScrollStaggeredLayoutManager(context, spanCount)
             recyclerView.addItemDecoration(
                 FlexibleItemDecoration(requireContext())
             )
