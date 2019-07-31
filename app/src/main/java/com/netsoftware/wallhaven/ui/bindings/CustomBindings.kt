@@ -34,9 +34,7 @@ object CustomBindings {
             if (imageView.getTag(R.id.image_url) == null || imageView.getTag(R.id.image_url) != imageThumbs[thumbSize]) {
                 imageView.setImageBitmap(null)
                 imageView.setTag(R.id.image_url, imageThumbs[thumbSize])
-                val request = GlideApp.with(imageView).load(imageThumbs[thumbSize])
-                if (viewerType == ViewerViewModel.ViewerType.SUITABLE_TYPE) request.centerCrop() else request.centerInside()
-                request.into(imageView)
+                GlideApp.with(imageView).load(imageThumbs[thumbSize]).centerInside().into(imageView)
             }
         } else {
             imageView.setTag(R.id.image_url, null)

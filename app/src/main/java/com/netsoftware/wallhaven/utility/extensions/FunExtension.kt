@@ -5,15 +5,14 @@ import android.os.Bundle
 import android.util.TypedValue
 import androidx.navigation.NavArgument
 import com.google.android.material.snackbar.Snackbar
-import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.data.models.Tag
 import com.netsoftware.wallhaven.data.models.User.Companion.THUMB_ORIGINAL
 import com.netsoftware.wallhaven.data.models.Wallpaper
 import com.netsoftware.wallhaven.utility.managers.MyDisplayManager
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import kotlinx.serialization.json.JSON
 import java.text.DecimalFormat
-
 
 val Int.pxToDp: Int
     get() = (this / Resources.getSystem().displayMetrics.density).toInt()
@@ -66,7 +65,16 @@ fun Map<String, NavArgument>.toBundle(): Bundle {
 }
 
 fun Snackbar.changeColors(): Snackbar{
-    this.setTextColor(this.context.getColor(R.color.primary_light_text))
-    this.setBackgroundTint(this.context.getColor(R.color.gray))
+    this.setTextColor(this.context.getColor(com.netsoftware.wallhaven.R.color.primary_light_text))
+    this.setBackgroundTint(this.context.getColor(com.netsoftware.wallhaven.R.color.gray))
     return this
+}
+
+fun String.isJsonTagValid(): Boolean {
+    try {
+        JSON.parse(Tag.serializer(),this)
+    } catch (ex: Exception) {
+            return false
+    }
+    return true
 }

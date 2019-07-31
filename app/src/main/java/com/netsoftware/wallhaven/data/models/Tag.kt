@@ -3,7 +3,9 @@ package com.netsoftware.wallhaven.data.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(tableName = "tag")
 data class Tag(
     @PrimaryKey

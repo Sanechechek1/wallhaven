@@ -11,12 +11,17 @@ import androidx.navigation.fragment.NavHostFragment
 import co.zsmb.materialdrawerkt.builders.accountHeader
 import co.zsmb.materialdrawerkt.builders.drawer
 import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
+import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
+import co.zsmb.materialdrawerkt.draweritems.expandable.expandableItem
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.essentialpack_typeface_library.EssentialPack
 import com.mikepenz.materialdrawer.Drawer
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.databinding.MainActivityBinding
+import com.netsoftware.wallhaven.ui.main.ViewerViewModel.Category.*
 import com.netsoftware.wallhaven.ui.main.ViewerViewModel.ViewerType.*
 import com.netsoftware.wallhaven.utility.extensions.changeColors
 import dagger.android.support.DaggerAppCompatActivity
@@ -27,12 +32,26 @@ class MainActivity : DaggerAppCompatActivity() {
     lateinit var binding: MainActivityBinding
     lateinit var navController: NavController
     val coroutineScope = CoroutineScope(Dispatchers.Main)
-    private val titleMap = mapOf<String, Long>(
-        SUITABLE_TYPE.name to 1,
-        LATEST_TYPE.name to 2,
-        TOPLIST_TYPE.name to 3,
-        RANDOM_TYPE.name to 4,
-        FAVORITES_TYPE.name to 5
+    private val titleMap = listOf(
+        SUITABLE_TYPE.name,
+        LATEST_TYPE.name,
+        TOPLIST_TYPE.name,
+        RANDOM_TYPE.name,
+        FAVORITES_TYPE.name,
+        THREE_D.name,
+        ABSTRACT.name,
+        ANIME.name,
+        ART.name,
+        CARS.name,
+        CITY.name,
+        DARK.name,
+        GIRLS.name,
+        MINIMALISM.name,
+        NATURE.name,
+        SIMPLE.name,
+        SPACE.name,
+        LANDSCAPE.name,
+        TEXTURE.name
     )
     var exitAppPressed = false
     var oopsCounter = 0
@@ -43,19 +62,17 @@ class MainActivity : DaggerAppCompatActivity() {
         navController = Navigation.findNavController(binding.container.getViewById(R.id.nav_host_frag))
         navController.setGraph(
             R.navigation.nav_graph,
-            ViewerFragmentArgs.Builder().setViewerType(SUITABLE_TYPE).build().toBundle()
+            ViewerFragmentArgs.Builder().setViewerType(SUITABLE_TYPE).setDrawerItemName(SUITABLE_TYPE.name).build().toBundle()
         )
         drawerInit()
         navController.addOnDestinationChangedListener { _, destination, arguments ->
             when (destination.id) {
                 R.id.viewerFragment -> {
-                    when (arguments?.let { ViewerFragmentArgs.fromBundle(it).viewerType }) {
-                        SUITABLE_TYPE -> titleMap[SUITABLE_TYPE.name]?.let { drawer.setSelection(it, false) }
-                        LATEST_TYPE -> titleMap[LATEST_TYPE.name]?.let { drawer.setSelection(it, false) }
-                        TOPLIST_TYPE -> titleMap[TOPLIST_TYPE.name]?.let { drawer.setSelection(it, false) }
-                        RANDOM_TYPE -> titleMap[RANDOM_TYPE.name]?.let { drawer.setSelection(it, false) }
-                        FAVORITES_TYPE -> titleMap[FAVORITES_TYPE.name]?.let { drawer.setSelection(it, false) }
-                        else -> drawer.deselect()
+                    arguments?.let { bundle ->
+                        drawer.setSelection(
+                            titleMap.indexOf(ViewerFragmentArgs.fromBundle(bundle).drawerItemName).toLong(),
+                            false
+                        )
                     }
                 }
                 else -> TODO()
@@ -71,56 +88,103 @@ class MainActivity : DaggerAppCompatActivity() {
                 background = R.drawable.drawer_header
             }
             primaryItem(getString(R.string.title_suitable)) {
-                identifier = titleMap[SUITABLE_TYPE.name] ?: 1
+                identifier = titleMap.indexOf(SUITABLE_TYPE.name).toLong()
                 iicon = EssentialPack.Icon.esp_smartphone
             }
             primaryItem(getString(R.string.title_latest)) {
-                identifier = titleMap[LATEST_TYPE.name] ?: 2
+                identifier = titleMap.indexOf(LATEST_TYPE.name).toLong()
                 iicon = EssentialPack.Icon.esp_time
             }
             primaryItem(getString(R.string.title_toplist)) {
-                identifier = titleMap[TOPLIST_TYPE.name] ?: 3
+                identifier = titleMap.indexOf(TOPLIST_TYPE.name).toLong()
                 iicon = EssentialPack.Icon.esp_diamond
             }
             primaryItem(getString(R.string.title_random)) {
-                identifier = titleMap[RANDOM_TYPE.name] ?: 4
+                identifier = titleMap.indexOf(RANDOM_TYPE.name).toLong()
                 iicon = EssentialPack.Icon.esp_shuffle
             }
             primaryItem(getString(R.string.title_favorites)) {
-                identifier = titleMap[FAVORITES_TYPE.name] ?: 5
-                enabled = false
-                disabledIconColorRes = R.color.material_drawer_icon_disabled
+                identifier = titleMap.indexOf(FAVORITES_TYPE.name).toLong()
                 iicon = EssentialPack.Icon.esp_like_2
             }
-            primaryItem(getString(R.string.title_tags)) {
-                //TODO: change to TagsFragment TAG
-                identifier = titleMap["hereMustBeTAG"] ?: 6
-                enabled = false
-                disabledIconColorRes = R.color.material_drawer_icon_disabled
-                iicon = EssentialPack.Icon.esp_price_tag
+            expandableItem {
+                nameRes = R.string.title_categories
+                selectable = false
+                iicon = EssentialPack.Icon.esp_layers_1
+                secondaryItem(getString(THREE_D.titleId)) {
+                    level = 2; identifier = titleMap.indexOf(THREE_D.name).toLong()
+                }
+                secondaryItem(getString(ABSTRACT.titleId)) {
+                    level = 2; identifier = titleMap.indexOf(ABSTRACT.name).toLong()
+                }
+                secondaryItem(getString(ANIME.titleId)) {
+                    level = 2; identifier = titleMap.indexOf(ANIME.name).toLong()
+                }
+                secondaryItem(getString(ART.titleId)) { level = 2; identifier = titleMap.indexOf(ART.name).toLong() }
+                secondaryItem(getString(CARS.titleId)) { level = 2; identifier = titleMap.indexOf(CARS.name).toLong() }
+                secondaryItem(getString(CITY.titleId)) { level = 2; identifier = titleMap.indexOf(CITY.name).toLong() }
+                secondaryItem(getString(DARK.titleId)) { level = 2; identifier = titleMap.indexOf(DARK.name).toLong() }
+                secondaryItem(getString(GIRLS.titleId)) {
+                    level = 2; identifier = titleMap.indexOf(GIRLS.name).toLong()
+                }
+                secondaryItem(getString(MINIMALISM.titleId)) {
+                    level = 2; identifier = titleMap.indexOf(MINIMALISM.name).toLong()
+                }
+                secondaryItem(getString(NATURE.titleId)) {
+                    level = 2; identifier = titleMap.indexOf(NATURE.name).toLong()
+                }
+                secondaryItem(getString(SIMPLE.titleId)) { level = 2; identifier = titleMap.indexOf(SIMPLE.name).toLong() }
+                secondaryItem(getString(SPACE.titleId)) {
+                    level = 2; identifier = titleMap.indexOf(SPACE.name).toLong()
+                }
+                secondaryItem(getString(LANDSCAPE.titleId)) {
+                    level = 2; identifier = titleMap.indexOf(LANDSCAPE.name).toLong()
+                }
+                secondaryItem(getString(TEXTURE.titleId)) {
+                    level = 2; identifier = titleMap.indexOf(TEXTURE.name).toLong()
+                }
             }
+//            divider {}
+//            secondaryItem(getString(THREE_D.titleId)) { identifier = titleMap[THREE_D.name] ?: 6 }
+//            secondaryItem(getString(ABSTRACT.titleId)) { identifier = titleMap[ABSTRACT.name] ?: 7 }
+//            secondaryItem(getString(ANIME.titleId)) { identifier = titleMap[ANIME.name] ?: 8 }
+//            secondaryItem(getString(ART.titleId)) { identifier = titleMap[ART.name] ?: 9 }
+//            secondaryItem(getString(CARS.titleId)) { identifier = titleMap[CARS.name] ?: 10 }
+//            secondaryItem(getString(CITY.titleId)) { identifier = titleMap[CITY.name] ?: 11 }
+//            secondaryItem(getString(DARK.titleId)) { identifier = titleMap[DARK.name] ?: 12 }
+//            secondaryItem(getString(GIRLS.titleId)) { identifier = titleMap[GIRLS.name] ?: 13 }
+//            secondaryItem(getString(MINIMALISM.titleId)) { identifier = titleMap[MINIMALISM.name] ?: 14 }
+//            secondaryItem(getString(NATURE.titleId)) { identifier = titleMap[NATURE.name] ?: 15 }
+//            secondaryItem(getString(SIMPLE.titleId)) { identifier = titleMap[SIMPLE.name] ?: 16 }
+//            secondaryItem(getString(SPACE.titleId)) { identifier = titleMap[SPACE.name] ?: 17 }
+//            secondaryItem(getString(LANDSCAPE.titleId)) { identifier = titleMap[LANDSCAPE.name] ?: 18 }
+//            secondaryItem(getString(TEXTURE.titleId)) { identifier = titleMap[TEXTURE.name] ?: 19 }
             divider {}
-            primaryItem(getString(R.string.title_settings)) {
-                //TODO: change to SettingsFragment TAG
-                identifier = titleMap["hereMustBeTAG"] ?: 7
-                enabled = false
-                disabledIconColorRes = R.color.material_drawer_icon_disabled
-                iicon = EssentialPack.Icon.esp_settings_5
-            }
             primaryItem(getString(R.string.title_about)) {
                 //TODO: change to AboutFragment TAG
-                identifier = titleMap["hereMustBeTAG"] ?: 8
+                identifier = titleMap.indexOf("hereMustBeTAG").toLong()
                 enabled = false
                 disabledIconColorRes = R.color.material_drawer_icon_disabled
                 iicon = EssentialPack.Icon.esp_info
             }
             onItemClick { _, _, drawerItem ->
-                when (drawerItem.identifier) {
-                    titleMap[SUITABLE_TYPE.name] -> navigateToViewer(SUITABLE_TYPE)
-                    titleMap[LATEST_TYPE.name] -> navigateToViewer(LATEST_TYPE)
-                    titleMap[TOPLIST_TYPE.name] -> navigateToViewer(TOPLIST_TYPE)
-                    titleMap[RANDOM_TYPE.name] -> navigateToViewer(RANDOM_TYPE)
-                    titleMap[FAVORITES_TYPE.name] -> navigateToViewer(FAVORITES_TYPE)
+                if (drawerItem.identifier >= 0) {
+                    when (drawerItem) {
+                        is SecondaryDrawerItem -> {
+                            val category = ViewerViewModel.Category.valueOf(titleMap[drawerItem.identifier.toInt()])
+                            navigateToViewer(
+                                LATEST_TYPE,
+                                getString(category.queryId),
+                                category
+                            )
+                        }
+                        is PrimaryDrawerItem -> {
+                            navigateToViewer(
+                                ViewerViewModel.ViewerType.valueOf(titleMap[drawerItem.identifier.toInt()]),
+                                category = NONE
+                            )
+                        }
+                    }
                 }
                 false
             }
@@ -139,25 +203,37 @@ class MainActivity : DaggerAppCompatActivity() {
         drawer.openDrawer()
     }
 
-    //TODO: create query handler and delete this. Use @navigateToViewer instead
-    fun navigateToSearch(tagId: String) {
+    fun navigateToTagSearch(tag: String) {
         navController.navigate(
             ViewerFragmentDirections.goViewer().apply {
                 viewerType = LATEST_TYPE
-                //TODO: create QueryHelper
-                searchQuery = "id:$tagId"
+                drawerItemName = LATEST_TYPE.name
+                searchQuery = tag
             })
     }
 
-    fun navigateToViewer(type: ViewerViewModel.ViewerType, query: String = "") {
+    fun navigateToViewer(
+        type: ViewerViewModel.ViewerType,
+        query: String = "",
+        category: ViewerViewModel.Category
+    ) {
+        var currentQuery = ""
         val currentType =
-            supportFragmentManager.findFragmentById(R.id.nav_host_frag)?.childFragmentManager?.primaryNavigationFragment
-                ?.arguments?.let { ViewerFragmentArgs.fromBundle(it).viewerType }
-        if ((currentType != null && currentType != type) || currentType == null) {
+            supportFragmentManager.findFragmentById(R.id.nav_host_frag)
+                ?.childFragmentManager?.primaryNavigationFragment
+                ?.arguments?.let { bundle ->
+                ViewerFragmentArgs.fromBundle(bundle).let {
+                    currentQuery = it.searchQuery.toString()
+                    it.viewerType
+                }
+            }
+        if ((currentType != null && (currentType != type || currentQuery != query)) || currentType == null) {
             navController.navigate(
                 ViewerFragmentDirections.goViewer().apply {
                     viewerType = type
                     searchQuery = query
+                    drawerItemName = if (category != NONE) category.name else type.name
+                    this.category = category
                 })
         }
     }
@@ -176,9 +252,11 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     fun closeInfo() {
-        binding.infoPanel.apply {
-            startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_bottom_to_down))
-            visibility = View.GONE
+        if (binding.infoPanel.isVisible) {
+            binding.infoPanel.apply {
+                startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_bottom_to_down))
+                visibility = View.GONE
+            }
         }
     }
 

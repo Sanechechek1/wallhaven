@@ -1,9 +1,6 @@
 package com.netsoftware.wallhaven.data.dataSources.local
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.netsoftware.wallhaven.data.models.Wallpaper
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -21,6 +18,9 @@ interface WallpaperDao{
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun simpleInsert(wallpaper: Wallpaper)
+
+    @Delete
+    fun delete(wallpaper: Wallpaper)
 
     @Query("DELETE from wallpaper")
     fun deleteAll()

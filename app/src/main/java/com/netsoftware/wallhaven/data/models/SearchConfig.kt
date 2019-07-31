@@ -5,6 +5,7 @@ import com.netsoftware.wallhaven.data.dataSources.local.SharedPrefs
 import com.netsoftware.wallhaven.data.models.User.Companion.TOPLIST_MONTH
 import com.netsoftware.wallhaven.ui.main.ViewerFragmentArgs
 import com.netsoftware.wallhaven.ui.main.ViewerViewModel.ViewerType.SUITABLE_TYPE
+import kotlinx.serialization.json.JSON
 
 data class SearchConfig(
     var q: String = "",
@@ -158,7 +159,14 @@ data class SearchConfig(
                     }
                 }
             }
-            searchConfig.q = bundle?.let { ViewerFragmentArgs.fromBundle(it).searchQuery } ?: ""
+            (bundle?.let { ViewerFragmentArgs.fromBundle(it).searchQuery } ?: "").apply {
+                try {
+                    searchConfig.q = "id:${JSON.parse(Tag.serializer(), this).id}"
+                }
+                catch (e: Exception){
+                    searchConfig.q = this
+                }
+            }
             return searchConfig
         }
 

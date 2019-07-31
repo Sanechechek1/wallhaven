@@ -25,5 +25,16 @@
             app:argType="string"
             android:defaultValue="@null"
             />
+        <argument
+            android:name="drawerItemName"
+            app:nullable="true"
+            app:argType="string"
+            android:defaultValue="@null"
+            />
+        <argument
+            android:name="category"
+            app:argType="com.netsoftware.wallhaven.ui.main.ViewerViewModel$Category"
+            android:defaultValue="NONE"
+            />
     </fragment>
 </navigation>

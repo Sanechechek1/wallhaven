@@ -26,8 +26,15 @@ class WallpaperRepository @Inject constructor(
     fun getRandom(searchConfig: SearchConfig): Single<List<Wallpaper>> =
         wallhavenApi.getSearch(searchConfig.copy(sorting = SearchConfig.SORTING_RANDOM).toMap())
 
+    fun getFavourites(): Single<List<Wallpaper>> =
+        wpDao.getAll().subscribeOn(Schedulers.io())
+
     fun saveWallpaper(wallpaper: Wallpaper): Single<Unit> {
         return Single.fromCallable { wpDao.simpleInsert(wallpaper) }.subscribeOn(Schedulers.io())
+    }
+
+    fun deleteWallpaper(wallpaper: Wallpaper): Single<Unit> {
+        return Single.fromCallable { wpDao.delete(wallpaper) }.subscribeOn(Schedulers.io())
     }
 
 }

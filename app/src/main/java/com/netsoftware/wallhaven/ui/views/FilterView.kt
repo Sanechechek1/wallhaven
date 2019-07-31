@@ -28,9 +28,12 @@ class FilterView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
     private val binding: PartFilterBinding =
         DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.part_filter, this, true)
     var searchConfig = SearchConfig()
+        set(value) {
+            field = SearchConfig(value)
+        }
     var defaultConfig = SearchConfig()
         set(value) {
-            field = value
+            field = SearchConfig(value)
             searchConfig = SearchConfig(value)
             defaultSetup()
         }

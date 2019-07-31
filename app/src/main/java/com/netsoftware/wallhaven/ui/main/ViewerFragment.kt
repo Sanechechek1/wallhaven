@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
@@ -33,10 +34,12 @@ import com.netsoftware.wallhaven.R
 import com.netsoftware.wallhaven.WallhavenApp
 import com.netsoftware.wallhaven.WallhavenApp.Companion.TAG
 import com.netsoftware.wallhaven.data.models.SearchConfig
+import com.netsoftware.wallhaven.data.models.Tag
 import com.netsoftware.wallhaven.data.models.Wallpaper
 import com.netsoftware.wallhaven.databinding.ViewerFragmentBinding
 import com.netsoftware.wallhaven.ui.adapters.ProgressItem
 import com.netsoftware.wallhaven.ui.adapters.WallpaperItem
+import com.netsoftware.wallhaven.ui.main.ViewerViewModel.ViewerType.FAVORITES_TYPE
 import com.netsoftware.wallhaven.ui.main.ViewerViewModel.ViewerType.SUITABLE_TYPE
 import com.netsoftware.wallhaven.ui.views.ImageViewerOverlay
 import com.netsoftware.wallhaven.ui.views.SetWallDialog
@@ -54,6 +57,7 @@ import eu.davidea.flexibleadapter.common.SmoothScrollStaggeredLayoutManager
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.*
+import kotlinx.serialization.json.JSON
 import java.io.File
 import javax.inject.Inject
 
@@ -68,6 +72,7 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
     private val compositeDisposable = CompositeDisposable()
     private val adapter = FlexibleAdapter<IFlexible<*>>(mutableListOf(), this, true)
     private var currentImage = -1
+    private lateinit var category: ViewerViewModel.Category
 
     private lateinit var imageViewer: StfalconImageViewer<Wallpaper>
 
@@ -79,18 +84,27 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
         binding = DataBindingUtil.inflate(inflater, R.layout.viewer_fragment, container, false)
         binding.viewModel = ViewModelProviders.of(this, viewModelFactory).get(ViewerViewModel::class.java)
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel?.init(viewerType, SearchConfig.configFromBundle(arguments))
+        binding.viewModel?.let {
+            if (it.getWalls().isEmpty() || (savedInstanceState != null && savedInstanceState.getBoolean("reinit"))) {
+                binding.viewModel?.init(viewerType, SearchConfig.configFromBundle(arguments))
+            }
+        }
+        category = arguments?.let { ViewerFragmentArgs.fromBundle(it).category } ?: ViewerViewModel.Category.NONE
 
         setupToolbar()
         setupRecyclerView()
         setupFilter()
-        subscribeObserves()
+        //save searchsetting state on rotation and on backPres
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        subscribeObserves()
     }
 
     private fun setupToolbar() {
         binding.apply {
-            toolbarTitle.setText(getString(viewerType.titleId).format(viewModel?.defaultSearchConfig?.q))
+            toolbarTitle.setText(getTitleText())
             toolbarMenuIcon.setOnClickListener {
                 (activity as MainActivity).openDrawer()
                 WallhavenApp.hideKeyboard(it)
@@ -106,16 +120,20 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
             }
             toolbarSearchIcon.setOnClickListener {
                 toolbarTitle.isEnabled = true
-                if (toolbarTitle.text.toString() == getString(viewerType.titleId).format(viewModel?.searchConfig?.q.toString()))
-                    toolbarTitle.setText("")
+                toolbarTitle.setText("")
                 toolbarTitle.requestFocus()
-                toolbarTitle.setSelection(toolbarTitle.text.length)
                 WallhavenApp.showKeyboard(toolbarTitle)
             }
             toolbarTitle.setOnEditorActionListener { textView, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH)
                     searchViewProcess(textView.text.trim().toString())
                 false
+            }
+            if (viewerType == FAVORITES_TYPE) {
+                toolbarSearchIcon.visibility = View.GONE
+                toolbarFilterIcon.visibility = View.GONE
+            } else if (category != ViewerViewModel.Category.NONE) {
+                toolbarSearchIcon.visibility = View.GONE
             }
         }
     }
@@ -156,6 +174,8 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
                 EssentialPackFilled.Icon.esf_controls_filled
             ).sizePx(resources.getDimension(R.dimen.iicon_size).toInt())
             viewModel?.defaultSearchConfig?.let { filterView.defaultConfig = it }
+            //TODO:change behavior of filterView
+            viewModel?.searchConfig?.let { filterView.searchConfig = it }
             filterView.setOnPositiveButtonClick {
                 startSearch(filterView.searchConfig)
                 if (filterView.hasChanges()) {
@@ -179,7 +199,7 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
             viewModel?.getPage()?.observe(
                 viewLifecycleOwner,
                 Observer {
-                    if (adapter.itemCount == 0 || refreshLayout.isRefreshing) {
+                    if (viewerType != FAVORITES_TYPE && (adapter.itemCount == 0 || refreshLayout.isRefreshing)) {
                         adapter.updateDataSet(it.map { wall -> WallpaperItem(wall, viewerType) })
                         if (viewModel?.isLoading()?.value != true) {
                             toggleEmptyPlaceholder(it.isEmpty())
@@ -193,6 +213,22 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
                 toggleNoInternetPlaceholder(it)
             })
         }
+    }
+
+    private fun getTitleText(): String {
+        return (if (category != ViewerViewModel.Category.NONE) {
+            getString(category.titleId)
+        } else if (!binding.viewModel?.searchConfig?.q.isNullOrEmpty()) {
+            arguments?.let { bundle ->
+                ViewerFragmentArgs.fromBundle(bundle).searchQuery?.let {
+                    try {
+                        JSON.parse(Tag.serializer(), it).name
+                    } catch (e: Exception) {
+                        it.capitalize()
+                    }
+                }
+            }
+        } else getString(viewerType.titleId)).toString()
     }
 
     override fun noMoreLoad(newItemsSize: Int) {
@@ -212,11 +248,18 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
             ImageViewerOverlay(context, viewLifecycleOwner, currentWall, View.OnClickListener {
                 imageViewer.updateTransitionImage(null)
                 imageViewer.dismiss()
-                //TODO: change to startSearch configuring instead navigate to another fragment
-                (activity as MainActivity).navigateToSearch(it.tag.toString())
+                (it as Chip).apply {
+                    (activity as MainActivity).navigateToTagSearch(
+                        JSON.stringify(
+                            Tag.serializer(),
+                            Tag(this.tag.toString().toLong(), this.text.toString())
+                        )
+                    )
+                }
             })
-        overlay.setFavoriteListener {
-            //TODO
+        overlay.setFavoriteListener { wall, isAdded ->
+            if (isAdded) binding.viewModel?.deleteFromFavourite(wall)
+            else binding.viewModel?.saveToFavourite(wall)
         }
         overlay.setSaveImageListener { bitmap, path ->
             saveImage(overlay, bitmap, path)
@@ -355,6 +398,10 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
                 toolbarTitle.setText(getString(viewerType.titleId).format(searchConfig.q))
                 toolbarTitle.isEnabled = false
             }
+            binding.apply {
+                filterView.searchConfig.q = searchConfig.q
+                filterView.defaultConfig.q = searchConfig.q
+            }
             startSearch(searchConfig)
         }
     }
@@ -421,6 +468,7 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("currentImage", currentImage)
+        outState.putBoolean("reinit", true)
     }
 
     override fun onDestroy() {

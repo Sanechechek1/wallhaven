@@ -1,9 +1,6 @@
 package com.netsoftware.wallhaven
 
-import android.content.ContentValues
 import android.content.Context
-import android.net.Uri
-import android.provider.MediaStore
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.mikepenz.essentialpack_typeface_library.EssentialPack
@@ -81,31 +78,6 @@ class WallhavenApp : DaggerApplication() {
         fun showKeyboard(view: View) {
             val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(view, 0)
-        }
-
-        fun getContentUti(context: Context, path: String): Uri? {
-            val result: Uri?
-            val cursor = context.contentResolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                arrayOf(MediaStore.Images.Media._ID),
-                MediaStore.Images.Media.DATA + "=? ",
-                arrayOf(path),
-                null
-            )
-            if (cursor != null && cursor.moveToFirst()) {
-                val id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
-                result = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Integer.toString(id))
-            } else if (path.isNotEmpty()) {
-                val values = ContentValues()
-                values.put(MediaStore.Images.Media.DATA, path)
-                result = context.contentResolver.insert(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values
-                )
-            } else {
-                result = null
-            }
-            cursor?.close()
-            return result
         }
     }
 }

@@ -9,6 +9,8 @@ import android.net.Uri
 import android.os.Environment
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
@@ -63,6 +65,7 @@ class ImageViewerOverlay(
             context?.startActivity(browserIntent)
         }
         wallLiveData?.value?.isLiked?.let { activateLike(it) }
+        toggleBtns(false)
     }
 
     constructor(context: Context?, attributeSet: AttributeSet?) : this(context, null, null, null)
@@ -95,6 +98,10 @@ class ImageViewerOverlay(
                 e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean
             ): Boolean {
                 binding.isLoading?.value = false
+                binding.noInternetLabel.apply {
+                    visibility = View.VISIBLE
+                    startAnimation(AnimationUtils.loadAnimation(context, R.anim.extend_bottom))
+                }
                 return false
             }
 
@@ -103,6 +110,7 @@ class ImageViewerOverlay(
                 isFirstResource: Boolean
             ): Boolean {
                 binding.isLoading?.value = false
+                toggleBtns(true)
                 return false
             }
 
@@ -131,14 +139,20 @@ class ImageViewerOverlay(
         }
     }
 
-    fun setFavoriteListener(call: (wall: Wallpaper) -> Unit) {
+    fun toggleBtns(enable: Boolean) {
+        binding.downloadBtn.isEnabled = enable
+        binding.setWallpaperBtn.isEnabled = enable
+    }
+
+    fun setFavoriteListener(call: (wall: Wallpaper, isAdded: Boolean) -> Unit) {
         binding.favoriteBtn.setOnClickListener {
             if (it.isActivated) {
                 activateLike(false)
+                wallLiveData?.value?.let { wall -> call(wall, true) }
             } else {
                 activateLike(true)
+                wallLiveData?.value?.let { wall -> call(wall, false) }
             }
-            wallLiveData?.value?.let { wall -> call(wall) }
         }
     }
 
