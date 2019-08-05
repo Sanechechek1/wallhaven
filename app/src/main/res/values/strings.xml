@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Wallhaven</string>
+    <string name="app_name">Wallpool</string>
     <string name="apply">Accept</string>
     <string name="cancel">Cancel</string>
     <string name="select">Select</string>
@@ -59,6 +59,7 @@
     <string name="lock_wall_changed">Lock Screen Wallpaper Changed</string>
     <string name="both_wall_changed">Both Wallpapers Changed</string>
     <string name="info_setting_wallpaper">Setting Wallpaper…</string>
+    <string name="about_url">file:///android_asset/about.html</string>
 
     <!--Categories-->
     <string name="category_3d">3D</string>

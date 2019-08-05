@@ -10,11 +10,11 @@
 
         <variable
             name="wallpaper"
-            type="com.netsoftware.wallhaven.data.models.Wallpaper" />
+            type="com.netsoftware.wallpool.data.models.Wallpaper" />
 
         <variable
             name="viewerType"
-            type="com.netsoftware.wallhaven.ui.main.ViewerViewModel.ViewerType" />
+            type="com.netsoftware.wallpool.ui.main.ViewerViewModel.ViewerType" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

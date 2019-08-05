@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.netsoftware.wallhaven.ui.main.ViewerViewModel" />
+            type="com.netsoftware.wallpool.ui.main.ViewerViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -98,6 +98,7 @@
             android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:layout_constraintHeight_default="wrap"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -113,6 +114,7 @@
                 android:paddingTop="2dp"
                 android:paddingEnd="1dp"
                 android:paddingBottom="16dp"
+                app:layout_constraintHeight_default="wrap"
                 tools:itemCount="2"
                 tools:listitem="@layout/rv_item_viewer" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -135,7 +137,7 @@
             tools:text="@string/placeholder_no_internet"
             tools:visibility="visible" />
 
-        <com.netsoftware.wallhaven.ui.views.FilterView
+        <com.netsoftware.wallpool.ui.views.FilterView
             android:id="@+id/filter_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
