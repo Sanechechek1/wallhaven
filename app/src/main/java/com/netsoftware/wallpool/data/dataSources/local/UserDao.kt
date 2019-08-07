@@ -13,13 +13,13 @@ interface UserDao{
     fun getAll(): Single<List<User>>
 
     @Query("SELECT * from user WHERE id = :id")
-    fun getUser(id: Long): Single<User>
+    fun getUser(id: String): Single<User>
 
     @Insert(onConflict = REPLACE)
     fun insert(user: User): Single<Long>
 
     @Insert(onConflict = REPLACE)
-    fun simpleInsert(user: User): Long
+    fun simpleInsert(user: User)
 
     @Query("DELETE from user")
     fun deleteAll()

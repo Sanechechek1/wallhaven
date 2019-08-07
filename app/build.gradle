@@ -4,8 +4,17 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'androidx.navigation.safeargs'
+apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('/home/ascri/StudioProjects/Wallhaven_DOCS/keystorage.jks')
+            storePassword '0773103200'
+            keyAlias = 'wallpool_key'
+            keyPassword '0773103200'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.netsoftware.wallpool"
@@ -29,8 +38,9 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -138,4 +148,10 @@ dependencies {
 
     //Serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.9.1"
+
+    //firebase
+    implementation 'com.google.firebase:firebase-core:17.0.1'
+    implementation 'com.google.firebase:firebase-analytics:17.0.1'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 }
+apply plugin: 'com.google.gms.google-services'

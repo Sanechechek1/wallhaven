@@ -12,10 +12,10 @@ class UserRepository @Inject constructor(
     private val userDao: UserDao,
     private val wallhavenApi: WallhavenApi
 ) {
-    fun getUser(id: Long): Single<User> {
+    fun getUser(id: String): Single<User> {
         return userDao.getUser(id)
             .flatMap { t ->
-                if (t.apiKey.isNotEmpty() && netManager.isConnectedToInternet == true) {
+                if (t.apiKey.isNotEmpty() && netManager.isConnectedToInternet) {
                     wallhavenApi.getUser(t.apiKey)
                         .map {
                             it.copy(id = t.id, apiKey = t.apiKey)

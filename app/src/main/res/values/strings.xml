@@ -93,4 +93,10 @@
     <string name="category_landscape_query" translatable="false">id:711</string>
     <string name="category_texture_query" translatable="false">id:1474</string>
     <string name="category_none_query" translatable="false">None</string>
+
+    <!--Analytics-->
+    <string name="analytics_event_wall_saved">wall_saved</string>
+    <string name="analytics_event_wall_set">wall_set</string>
+    <string name="analytics_event_wall_opened">wall_opened</string>
+    <string name="analytics_event_wall_key">wall</string>
 </resources>

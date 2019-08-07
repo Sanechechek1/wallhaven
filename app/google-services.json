@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "756277549923",
+    "firebase_url": "https://wallpool-f26bf.firebaseio.com",
+    "project_id": "wallpool-f26bf",
+    "storage_bucket": "wallpool-f26bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756277549923:android:1b09ad9a92b42fc1",
+        "android_client_info": {
+          "package_name": "com.netsoftware.wallpool"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "756277549923-39qg5lu6hom5sepsvlrvrqjighdcmhl0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.netsoftware.wallpool",
+            "certificate_hash": "804ab6632850caf6c9d5c87f0f42acf2341a954b"
+          }
+        },
+        {
+          "client_id": "756277549923-6ckit0kao6kmrsgej30027q946bo34ip.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJzp4_b_fq22nJ_m54YgnakIdm4Qg5Pg4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "756277549923-6ckit0kao6kmrsgej30027q946bo34ip.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

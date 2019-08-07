@@ -50,3 +50,13 @@
 -dontwarn com.yalantis.ucrop**
 -keep class com.yalantis.ucrop** { *; }
 -keep interface com.yalantis.ucrop** { *; }
+-keep class * extends androidx.fragment.app.Fragment{}
+-keep class com.netsoftware.wallpool.ui.main.ViewerFragment
+-keep class com.netsoftware.wallpool.ui.main.AboutFragment
+-keep class com.netsoftware.wallpool.ui.main.ViewerViewModel$ViewerType
+-keep class com.netsoftware.wallpool.ui.main.ViewerViewModel$Category
+-keep class com.netsoftware.wallpool.data** { *; }
+-keepattributes *Annotation*,SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**

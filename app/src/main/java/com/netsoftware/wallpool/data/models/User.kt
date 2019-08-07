@@ -4,11 +4,12 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import com.netsoftware.wallpool.data.dataSources.local.SharedPrefs
+import java.util.*
 
 @Entity(tableName = "user")
 data class User(
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0,
+    @PrimaryKey
+    var id: String = UUID.randomUUID().toString(),
     var apiKey: String = "",
 
     @SerializedName("username")
@@ -54,6 +55,5 @@ data class User(
         const val CATEGORY_PEOPLE = "people"
         const val PURITY_SFW = "sfw"
         const val PURITY_SKETCHY = "sketchy"
-        const val PURITY_NSFW = "nsfw"
     }
 }

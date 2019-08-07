@@ -36,7 +36,7 @@ class WallpoolApp : DaggerApplication() {
             prefs.screenResolution = MyDisplayManager.findResolution()
             prefs.screenRatio = MyDisplayManager.findRatio()
         }
-        if (prefs.userId == 0L) {
+        if (prefs.userId.isEmpty()) {
             populateDB()
         }
     }
@@ -45,7 +45,9 @@ class WallpoolApp : DaggerApplication() {
         runBlocking {
             appComponent.getSharedPrefs().userId =
                 withContext(Dispatchers.IO) {
-                    appComponent.getDB().userDao().simpleInsert(User(apiKey = "6kJO7b9FEEUOHpqRl6PZBBbjzkrfBkSY"))
+                    User().apply {
+                        appComponent.getDB().userDao().simpleInsert(this)
+                    }.id
                 }
         }
     }

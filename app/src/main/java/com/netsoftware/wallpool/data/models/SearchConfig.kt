@@ -10,7 +10,7 @@ import kotlinx.serialization.json.JSON
 data class SearchConfig(
     var q: String = "",
     var categories: String = getCategoriesCode(general = true, anime = true, people = true),
-    var purity: String = getPurityCode(sfw = true, sketchy = false, nsfw = false),
+    var purity: String = getPurityCode(sfw = true, sketchy = false),
     var sorting: String = SORTING_DATE_ADDED,
     var order: String = ORDER_DESC,
     var top_range: String = TOPLIST_MONTH,
@@ -65,14 +65,13 @@ data class SearchConfig(
 
     fun getPurityMap(): Map<String, Boolean> {
         val result =
-            mutableMapOf(User.PURITY_SFW to false, User.PURITY_SKETCHY to false, User.PURITY_NSFW to false)
+            mutableMapOf(User.PURITY_SFW to false, User.PURITY_SKETCHY to false)
         if (purity.length == 3) {
             purity.mapIndexed { index, c ->
                 if (Character.getNumericValue(c) == 1) {
                     when (index) {
                         0 -> result[User.PURITY_SFW] = true
                         1 -> result[User.PURITY_SKETCHY] = true
-                        2 -> result[User.PURITY_NSFW] = true
                     }
                 }
             }
@@ -139,11 +138,10 @@ data class SearchConfig(
             return result.toString()
         }
 
-        fun getPurityCode(sfw: Boolean, sketchy: Boolean, nsfw: Boolean): String {
+        fun getPurityCode(sfw: Boolean, sketchy: Boolean): String {
             val result = StringBuilder("000")
             if (sfw) result.setCharAt(0, '1')
             if (sketchy) result.setCharAt(1, '1')
-            if (nsfw) result.setCharAt(2, '1')
             return result.toString()
         }
 

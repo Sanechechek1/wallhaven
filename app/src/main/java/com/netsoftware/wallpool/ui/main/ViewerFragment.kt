@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.mikepenz.essentialpack_typeface_library.EssentialPack
@@ -33,6 +34,7 @@ import com.mikepenz.iconics.IconicsDrawable
 import com.netsoftware.wallpool.R
 import com.netsoftware.wallpool.WallpoolApp
 import com.netsoftware.wallpool.WallpoolApp.Companion.TAG
+import com.netsoftware.wallpool.data.dataSources.local.SharedPrefs
 import com.netsoftware.wallpool.data.models.SearchConfig
 import com.netsoftware.wallpool.data.models.Tag
 import com.netsoftware.wallpool.data.models.Wallpaper
@@ -67,15 +69,15 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
     lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject
     lateinit var netManager: NetManager
-    private lateinit var binding: ViewerFragmentBinding
-    private lateinit var viewerType: ViewerViewModel.ViewerType
     private val compositeDisposable = CompositeDisposable()
     private val adapter = FlexibleAdapter<IFlexible<*>>(mutableListOf(), this, true)
     private var currentImage = -1
-    private lateinit var category: ViewerViewModel.Category
     private val progressItem = ProgressItem()
-
+    private lateinit var binding: ViewerFragmentBinding
+    private lateinit var viewerType: ViewerViewModel.ViewerType
+    private lateinit var category: ViewerViewModel.Category
     private lateinit var imageViewer: StfalconImageViewer<Wallpaper>
+    private lateinit var analytics: FirebaseAnalytics
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -86,10 +88,11 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
         binding.viewModel = ViewModelProviders.of(this, viewModelFactory).get(ViewerViewModel::class.java)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel?.apply {
-            if (this.getWalls().isEmpty()) {
+            if (this.getWalls().isEmpty() && this.searchConfig.q.isEmpty()) {
                 binding.viewModel?.init(viewerType, SearchConfig.configFromBundle(arguments))
             } else if (adapter.isEmpty) {
                 adapter.updateDataSet(this.getWalls().map { wall -> WallpaperItem(wall, viewerType) })
+                if (this.getWalls().isEmpty()) refresh()
             }
         }
         category = arguments?.let { ViewerFragmentArgs.fromBundle(it).category } ?: ViewerViewModel.Category.NONE
@@ -102,6 +105,8 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         subscribeObserves()
+        analytics = FirebaseAnalytics.getInstance(requireContext())
+        analytics.setUserId(SharedPrefs.getSharedPrefs().userId)
     }
 
     private fun setupToolbar() {
@@ -179,7 +184,7 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
             viewModel?.searchConfig?.let { filterView.searchConfig = it }
             toolbarFilterIcon.icon = if (filterView.hasChanges()) filledFilterIcon else filterIcon
             filterView.setOnPositiveButtonClick {
-                startSearch(filterView.searchConfig)
+                startSearch(filterView.searchConfig.copy(q = viewModel?.searchConfig?.q ?: filterView.searchConfig.q))
                 toolbarFilterIcon.icon = if (filterView.hasChanges()) filledFilterIcon else filterIcon
                 animation()
             }
@@ -215,7 +220,10 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
                 toggleEmptyPlaceholder(walls.isEmpty())
             }
             if (!adapter.isEndlessScrollEnabled) adapter.setEndlessProgressItem(progressItem)
-        } else adapter.onLoadMoreComplete(walls.map { wall -> WallpaperItem(wall, viewerType) })
+        } else adapter.onLoadMoreComplete(walls.apply { toggleEmptyPlaceholder(walls.isEmpty() && adapter.isEmpty) }
+            .map { wall ->
+                WallpaperItem(wall, viewerType)
+            })
     }
 
     private fun getTitleText(): String {
@@ -266,6 +274,14 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
         }
         overlay.setSaveImageListener { bitmap, path ->
             saveImage(overlay, bitmap, path)
+            analytics.logEvent(
+                getString(R.string.analytics_event_wall_saved),
+                Bundle().apply {
+                    putString(
+                        getString(R.string.analytics_event_wall_key),
+                        currentWall.toString()
+                    )
+                })
         }
         overlay.setCropWallpaperListener { path ->
             checkPermission {
@@ -280,6 +296,9 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
                     .withAspectRatio(MyDisplayManager.getRatioX().toFloat(), MyDisplayManager.getRatioY().toFloat())
                     .withOptions(options)
                     .start(requireContext(), this@ViewerFragment)
+                analytics.logEvent(
+                    getString(R.string.analytics_event_wall_set),
+                    Bundle().apply { putString(getString(R.string.analytics_event_wall_key), currentWall.toString()) })
             }
         }
         imageViewer = StfalconImageViewer.Builder<Wallpaper>(
@@ -294,6 +313,9 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
             }
             .show()
         currentImage = position
+        analytics.logEvent(
+            getString(R.string.analytics_event_wall_opened),
+            Bundle().apply { putString(getString(R.string.analytics_event_wall_key), currentWall.toString()) })
         return false
     }
 
@@ -464,6 +486,7 @@ class ViewerFragment : DaggerFragment(), FlexibleAdapter.EndlessScrollListener, 
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
+        if (binding.toolbarTitle.text.toString() != getTitleText()) binding.toolbarTitle.isEnabled = true
         currentImage = savedInstanceState?.getInt("currentImage") ?: -1
         if (currentImage >= 0) onItemClick(null, currentImage)
     }

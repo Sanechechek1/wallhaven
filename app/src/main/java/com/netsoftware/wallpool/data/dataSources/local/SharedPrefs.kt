@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class SharedPrefs @Inject constructor(context: Application): KotprefModel(context){
     override val kotprefName: String = "wh_prefs"
-    var userId by longPref()
+    var userId by stringPref()
     var userApiKey by stringPref()
     var screenResolution by stringPref()
     var screenRatio by stringPref()

@@ -52,8 +52,7 @@ class FilterView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
         binding.puritySwitch.setOnSwitchListener { _, _ ->
             searchConfig.purity = SearchConfig.getPurityCode(
                 binding.puritySwitch.selectedTabs.contains(0),
-                binding.puritySwitch.selectedTabs.contains(1),
-                binding.puritySwitch.selectedTabs.contains(2)
+                binding.puritySwitch.selectedTabs.contains(1)
             )
         }
 
@@ -250,5 +249,5 @@ class FilterView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
         binding.cancelButton.callOnClick()
     }
 
-    fun hasChanges(): Boolean = defaultConfig != searchConfig
+    fun hasChanges(): Boolean = defaultConfig.copy(q="") != searchConfig.copy(q="")
 }
