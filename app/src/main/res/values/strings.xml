@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Wallpool</string>
+    <string name="app_name" translatable="false">Wallpool</string>
     <string name="apply">Accept</string>
     <string name="cancel">Cancel</string>
     <string name="select">Select</string>
-    <string name="delimiter">x</string>
+    <string name="delimiter" translatable="false">x</string>
     <string name="title_default">Default</string>
     <string name="title_search">Search: %1$s</string>
     <string name="title_suitable">Suitable</string>
@@ -45,11 +45,11 @@
     <string name="title_my_resolution">My Resolution</string>
     <string name="title_my">My %1$s</string>
     <string name="title_ultrawide">Ultrawide</string>
-    <string name="title_16x9">16x9</string>
-    <string name="title_16x10">16x10</string>
+    <string name="title_16x9" translatable="false">16x9</string>
+    <string name="title_16x10" translatable="false">16x10</string>
 
     <string name="permission_storage_denied">If you reject permission,you can not save image.
-        \n\nPlease turn on permissions at [Setting] > [Permission]</string>
+        \n\nPlease turn on permissions at [Setting] > [Apps] > [Wallpool] > [Permission]</string>
     <string name="title_crop">Edit Wallpaper</string>
     <string name="title_set_wall">Where you want set wallpaper?</string>
     <string name="title_home">HOME</string>
@@ -59,10 +59,10 @@
     <string name="lock_wall_changed">Lock Screen Wallpaper Changed</string>
     <string name="both_wall_changed">Both Wallpapers Changed</string>
     <string name="info_setting_wallpaper">Setting Wallpaper…</string>
-    <string name="about_url">file:///android_asset/about.html</string>
+    <string name="about_url" translatable="false">file:///android_asset/about.html</string>
 
     <!--Categories-->
-    <string name="category_3d">3D</string>
+    <string name="category_3d" translatable="false">3D</string>
     <string name="category_abstract">Abstract</string>
     <string name="category_anime">Anime</string>
     <string name="category_art">Art</string>
@@ -95,8 +95,8 @@
     <string name="category_none_query" translatable="false">None</string>
 
     <!--Analytics-->
-    <string name="analytics_event_wall_saved">wall_saved</string>
-    <string name="analytics_event_wall_set">wall_set</string>
-    <string name="analytics_event_wall_opened">wall_opened</string>
-    <string name="analytics_event_wall_key">wall</string>
+    <string name="analytics_event_wall_saved" translatable="false">wall_saved</string>
+    <string name="analytics_event_wall_set" translatable="false">wall_set</string>
+    <string name="analytics_event_wall_opened" translatable="false">wall_opened</string>
+    <string name="analytics_event_wall_key" translatable="false">wall</string>
 </resources>
