@@ -20,14 +20,17 @@ android {
         applicationId "com.netsoftware.wallpool"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas".toString())
             }
         }
+    }
+    aaptOptions {
+        ignoreAssetsPattern "tielanti.ttf:DeVinneTxtBT.ttf"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

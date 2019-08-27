@@ -24,7 +24,7 @@
     <string name="lock_wall_changed">Обои на экране блокировки изменены</string>
     <string name="select">Выбрать</string>
     <string name="title_about">О приложении</string>
-    <string name="title_both">Оба экрана</string>
+    <string name="title_both">Оба\nэкрана</string>
     <string name="title_categories">Категории</string>
     <string name="title_category">Категория</string>
     <string name="title_category_anime">Аниме</string>
@@ -40,8 +40,8 @@
     <string name="title_detail_size">Размер: %1$s</string>
     <string name="title_favorites">Избранные</string>
     <string name="title_height">Высота</string>
-    <string name="title_home">Домашний экран</string>
-    <string name="title_lock">Экран блокировки</string>
+    <string name="title_home">Домашний\nэкран</string>
+    <string name="title_lock">Экран\nблокировки</string>
     <string name="title_latest">Новые</string>
     <string name="title_my">Мое %1$s</string>
     <string name="title_my_resolution">Мое разрешение</string>
@@ -53,7 +53,7 @@
     <string name="title_resolution_exactly">Точно</string>
     <string name="title_search">Поиск: %1$s</string>
     <string name="title_select_resolution">Выберите разрешение</string>
-    <string name="title_set_wall">Куда вы хотите установить обои?</string>
+    <string name="title_set_wall">Выберете экран для установки обоев</string>
     <string name="title_settings">Настройки</string>
     <string name="title_suitable">Подходящие</string>
     <string name="title_tags">Теги</string>

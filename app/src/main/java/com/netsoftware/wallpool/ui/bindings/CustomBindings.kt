@@ -92,7 +92,7 @@ object CustomBindings {
                 setOnCheckedChangeListener(onCheckedChangeListener)
             }
         }
-        if (!itsColors && !chips.contains(myRatio))
+        if (!itsColors && !chips.contains(myRatio) && chips.first().length<7)
             chipGroup.addView(createChip().apply {
                 text = chipGroup.context.getString(R.string.title_my, myRatio)
             })
